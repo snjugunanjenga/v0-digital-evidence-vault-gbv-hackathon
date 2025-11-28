@@ -7,7 +7,7 @@ const steps = [
     title: "Select Your Evidence",
     description:
       "Choose photos, videos, messages, or documents from your device. Files are processed locally and never uploaded.",
-    image: "/woman-selecting-files-on-phone-dark-interface-with.jpg",
+    image: "/images/injured-20and-20vulnerable-20in-20hospital-20bed.png",
   },
   {
     number: "02",

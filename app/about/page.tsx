@@ -88,10 +88,10 @@ export default function AboutPage() {
           <h2 className="text-3xl font-bold text-foreground text-center mb-12">Our Team</h2>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             {[
-              { name: "Dr. Amina Ochieng", role: "Founder & CEO", icon: Users },
-              { name: "James Mwangi", role: "Chief Technology Officer", icon: Globe },
-              { name: "Grace Wanjiku", role: "Head of Survivor Services", icon: Heart },
-              { name: "David Kimani", role: "Legal Director", icon: Award },
+              { name: "Wachira Muchiri Everlyne", role: "Founder & CEO", icon: Users },
+              { name: "Captain", role: "Chief Technology Officer", icon: Globe },
+              { name: "Grace Wanjiku", role: "Head of Survivors", icon: Heart },
+              { name: "Brian", role: "Legal Director", icon: Award },
             ].map((member, i) => (
               <div key={i} className="glass-card p-6 rounded-xl text-center">
                 <div className="w-20 h-20 mx-auto rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center mb-4">
