@@ -1,9 +1,0 @@
-:HL["/_next/static/chunks/79d7d3b9550915ed.css","style"]
-:HL["/_next/static/media/797e433ab948586e-s.p.dbea232f.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
-:HL["/_next/static/media/83afe278b6a6bb3c-s.p.3a6ba036.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
-:HL["/images/gemini-generated-image-g1db6sg1db6sg1db.jpeg","image"]
-:HL["/images/injured-20and-20vulnerable-20in-20hospital-20bed.png","image"]
-:HL["/digital-fingerprint-hash-visualization-cybersecuri.jpg","image"]
-:HL["/images/gemini-generated-image-u9b4gku9b4gku9b4.jpeg","image"]
-:HL["/blockchain-network-visualization-with-timestamp-da.jpg","image"]
-0:{"buildId":"H_b_SzrP4L0H29zyKOJGm","tree":{"name":"","paramType":null,"paramKey":"","hasRuntimePrefetch":false,"slots":{"children":{"name":"__PAGE__","paramType":null,"paramKey":"__PAGE__","hasRuntimePrefetch":false,"slots":null,"isRootLayout":false}},"isRootLayout":true},"staleTime":300}
