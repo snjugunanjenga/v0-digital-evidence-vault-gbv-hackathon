@@ -126,3 +126,5 @@ docker-compose.override.yml
 
 # Local secrets (optional)
 secrets/
+
+AUTH_GOOGLE_SECRET=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
