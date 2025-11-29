@@ -1,11 +1,9 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Inter, Geist_Mono } from "next/font/google"
-import AnalyticsClient from "@/components/analytics-client"
+import { Inter } from "next/font/google"
 import "./globals.css"
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
-const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono" })
 
 export const metadata: Metadata = {
   title: "GBV Digital Evidence Vault | Secure Evidence for Survivors",
@@ -38,10 +36,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <body data-testim-main-word-scripts-loaded="true" className={`${inter.variable} ${geistMono.variable} font-sans antialiased`}>
+      <body data-testim-main-word-scripts-loaded="true" className={`${inter.variable} font-sans antialiased`}>
         {children}
-        {/* Client-only analytics component (prevents SSR/client attribute mismatches) */}
-        <AnalyticsClient />
       </body>
     </html>
   )
