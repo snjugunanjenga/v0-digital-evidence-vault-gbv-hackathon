@@ -2,12 +2,18 @@
 
 import type React from "react"
 import { useState } from "react"
+<<<<<<< HEAD
 import { useFormState, useFormStatus } from "react-dom"
+=======
+import { useRouter } from "next/navigation"
+import { signIn } from "next-auth/react"
+>>>>>>> refs/remotes/origin/main
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Eye, EyeOff, Loader2, Check, X } from "lucide-react"
+<<<<<<< HEAD
 import { signup, loginWithGoogle } from "@/lib/actions/auth"
 
 function SubmitButton() {
@@ -29,6 +35,9 @@ function SubmitButton() {
     </Button>
   )
 }
+=======
+import { signup } from "@/lib/actions/auth"
+>>>>>>> refs/remotes/origin/main
 
 export function SignupForm() {
   const [state, action] = useFormState(signup, undefined)
@@ -41,6 +50,50 @@ export function SignupForm() {
     { label: "Contains uppercase letter", met: /[A-Z]/.test(password) },
   ]
 
+<<<<<<< HEAD
+=======
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setError("")
+
+    if (!formData.acceptTerms) {
+      setError("Please accept the terms and conditions")
+      return
+    }
+
+    if (!passwordRequirements.every((req) => req.met)) {
+      setError("Password does not meet requirements")
+      return
+    }
+
+    setIsLoading(true)
+
+    try {
+      const result = await signup(formData)
+
+      if (result.error) {
+        setError(result.error)
+      } else {
+        await signIn("credentials", {
+          redirect: false,
+          email: formData.email,
+          password: formData.password,
+        })
+        router.push("/dashboard")
+      }
+    } catch (error) {
+      setError("An unexpected error occurred. Please try again.")
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleGoogleSignIn = async () => {
+    setIsLoading(true)
+    await signIn("google", { callbackUrl: "/dashboard" })
+  }
+
+>>>>>>> refs/remotes/origin/main
   return (
     <form action={action} className="space-y-6">
       {state?.error && (
@@ -146,7 +199,12 @@ export function SignupForm() {
         type="button"
         variant="outline"
         className="w-full neon-border bg-transparent hover:bg-primary/10"
+<<<<<<< HEAD
         onClick={() => loginWithGoogle()}
+=======
+        onClick={handleGoogleSignIn}
+        disabled={isLoading}
+>>>>>>> refs/remotes/origin/main
       >
         <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
           <path

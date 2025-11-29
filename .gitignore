@@ -1,1 +1,23 @@
 node_modules
+
+# ignore build artifacts and env files
+.next/
+.env
+.env.local
+.env.
+
+.env
+# OS / editor files
+.DS_Store
+.vscode/
+.idea/
+
+# local generated files
+.turbo/
+.output/
+dist/
+build/
+
+# lock files (if you don't want these in VCS)
+pnpm-lock.yaml
+package-lock.json

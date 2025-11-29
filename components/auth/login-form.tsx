@@ -2,7 +2,12 @@
 
 import type React from "react"
 import { useState } from "react"
+<<<<<<< HEAD
 import { useFormState, useFormStatus } from "react-dom"
+=======
+import { useRouter } from "next/navigation"
+import { signIn } from "next-auth/react"
+>>>>>>> refs/remotes/origin/main
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -32,6 +37,43 @@ function SubmitButton() {
 export function LoginForm() {
   const [state, action] = useFormState(login, undefined)
   const [showPassword, setShowPassword] = useState(false)
+<<<<<<< HEAD
+=======
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  })
+  const [error, setError] = useState("")
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setError("")
+    setIsLoading(true)
+
+    try {
+      const result = await signIn("credentials", {
+        redirect: false,
+        email: formData.email,
+        password: formData.password,
+      })
+
+      if (result?.error) {
+        setError("Invalid email or password")
+      } else {
+        router.push("/dashboard")
+      }
+    } catch (error) {
+      setError("An unexpected error occurred. Please try again.")
+    } finally {
+      setIsLoading(false)
+    }
+  }
+>>>>>>> refs/remotes/origin/main
+
+  const handleGoogleSignIn = async () => {
+    setIsLoading(true)
+    await signIn("google", { callbackUrl: "/dashboard" })
+  }
 
   return (
     <form action={action} className="space-y-6">
@@ -100,7 +142,12 @@ export function LoginForm() {
         type="button"
         variant="outline"
         className="w-full neon-border bg-transparent hover:bg-primary/10"
+<<<<<<< HEAD
         onClick={() => loginWithGoogle()}
+=======
+        onClick={handleGoogleSignIn}
+        disabled={isLoading}
+>>>>>>> refs/remotes/origin/main
       >
         <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
           <path
