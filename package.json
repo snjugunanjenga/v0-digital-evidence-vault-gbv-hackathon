@@ -54,6 +54,7 @@
     "next": "16.0.3",
     "next-auth": "latest",
     "next-themes": "latest",
+    "pnpm": "^10.24.0",
     "nodemailer": "latest",
     "prisma": "latest",
     "react": "19.2.0",

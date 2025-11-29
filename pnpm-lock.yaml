@@ -143,6 +143,9 @@ importers:
       next-themes:
         specifier: latest
         version: 0.4.6(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      pnpm:
+        specifier: ^10.24.0
+        version: 10.24.0
       nodemailer:
         specifier: latest
         version: 7.0.11
@@ -2198,6 +2201,9 @@ packages:
   picocolors@1.1.1:
     resolution: {integrity: sha512-xceH2snhtb5M9liqDsmEw56le376mTZkEX/jEb/RxNFyegNul7eNslCXP9FDj/Lcu0X8KEyMceP2ntpaHrDEVA==}
 
+  pnpm@10.24.0:
+    resolution: {integrity: sha512-Af+K5xtEGZA7ZcYPstydNM+LtuBtA73hEu8496NNaQTEJLpmvqXNzxKJAjC/OflYBHMUDtnJRv7zKLblI4o0Wg==}
+    engines: {node: '>=18.12'}
   pkg-types@2.3.0:
     resolution: {integrity: sha512-SIqCzDRg0s9npO5XQ3tNZioRY1uK06lA41ynBC1YmFTmnY6FjUjVt6s4LoADmwoig1qqD0oK8h1p/8mlMx8Oig==}
 
@@ -4408,6 +4414,7 @@ snapshots:
 
   picocolors@1.1.1: {}
 
+  pnpm@10.24.0: {}
   pkg-types@2.3.0:
     dependencies:
       confbox: 0.2.2
