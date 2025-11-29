@@ -4,6 +4,7 @@ import type React from "react"
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import { signIn } from "next-auth/react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -24,16 +25,28 @@ export function LoginForm() {
     setError("")
     setIsLoading(true)
 
-    // Mock authentication - replace with actual auth logic
-    await new Promise((resolve) => setTimeout(resolve, 1500))
+    try {
+      const result = await signIn("credentials", {
+        redirect: false,
+        email: formData.email,
+        password: formData.password,
+      })
 
-    // Simulate successful login
-    if (formData.email && formData.password) {
-      router.push("/dashboard")
-    } else {
-      setError("Please fill in all fields")
+      if (result?.error) {
+        setError("Invalid email or password")
+      } else {
+        router.push("/dashboard")
+      }
+    } catch (error) {
+      setError("An unexpected error occurred. Please try again.")
+    } finally {
       setIsLoading(false)
     }
+  }
+
+  const handleGoogleSignIn = async () => {
+    setIsLoading(true)
+    await signIn("google", { callbackUrl: "/dashboard" })
   }
 
   return (
@@ -118,6 +131,7 @@ export function LoginForm() {
         type="button"
         variant="outline"
         className="w-full neon-border bg-transparent hover:bg-primary/10"
+        onClick={handleGoogleSignIn}
         disabled={isLoading}
       >
         <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">

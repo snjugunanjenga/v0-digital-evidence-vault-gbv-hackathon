@@ -4,11 +4,13 @@ import type React from "react"
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import { signIn } from "next-auth/react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Eye, EyeOff, Loader2, Check, X } from "lucide-react"
+import { signup } from "@/lib/actions/auth"
 
 export function SignupForm() {
   const router = useRouter()
@@ -44,11 +46,29 @@ export function SignupForm() {
 
     setIsLoading(true)
 
-    // Mock signup - replace with actual auth logic
-    await new Promise((resolve) => setTimeout(resolve, 1500))
+    try {
+      const result = await signup(formData)
 
-    // Simulate successful signup
-    router.push("/dashboard")
+      if (result.error) {
+        setError(result.error)
+      } else {
+        await signIn("credentials", {
+          redirect: false,
+          email: formData.email,
+          password: formData.password,
+        })
+        router.push("/dashboard")
+      }
+    } catch (error) {
+      setError("An unexpected error occurred. Please try again.")
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleGoogleSignIn = async () => {
+    setIsLoading(true)
+    await signIn("google", { callbackUrl: "/dashboard" })
   }
 
   return (
@@ -175,6 +195,7 @@ export function SignupForm() {
         type="button"
         variant="outline"
         className="w-full neon-border bg-transparent hover:bg-primary/10"
+        onClick={handleGoogleSignIn}
         disabled={isLoading}
       >
         <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">

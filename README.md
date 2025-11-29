@@ -6,7 +6,7 @@
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.0-38bdf8)
 
 A secure, privacy-focused web application designed to help victims of Gender-Based Violence (GBV) safely store, manage, and verify digital evidence. This platform leverages local cryptographic hashing to ensure evidence integrity while maintaining user privacy.
-vercel link - https://vercel.com/captain-byus-projects/v0-digital-evidence-vault
+<!-- vercel link - https://vercel.com/captain-byus-projects/v0-digital-evidence-vault -->
 
 ## 🚀 Overview
 
