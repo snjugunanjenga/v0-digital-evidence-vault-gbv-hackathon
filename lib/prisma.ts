@@ -1,13 +1,11 @@
 import { PrismaClient } from '@prisma/client';
+import { PrismaPg } from '@prisma/adapter-pg';
 
-// Prisma CLI `defineConfig` shape is for the Prisma tool/CLI, not the client
-// constructor — passing it caused "Unknown property loadedFromFile" errors.
-// Create the Prisma client with the default settings here.
-// Pass an empty options object to the constructor — some runtime builds
-// (and bundles) may access `options.__internal` and expect the argument to
-// be an object. Passing `{}` avoids reading properties of `undefined` while
-// also not passing the Prisma CLI config object which contains unrelated
-// fields.
-export const prisma = new PrismaClient({});
+const databaseUrl = process.env.DATABASE_URL as string;
+const adapter = new PrismaPg({ connectionString: databaseUrl });
+
+export const prisma = new PrismaClient({
+  adapter,
+});
 
 export default prisma;

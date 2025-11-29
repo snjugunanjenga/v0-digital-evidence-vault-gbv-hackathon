@@ -2,47 +2,27 @@
 
 import type React from "react"
 import { useState } from "react"
-<<<<<<< HEAD
-import { useFormState, useFormStatus } from "react-dom"
-=======
 import { useRouter } from "next/navigation"
 import { signIn } from "next-auth/react"
->>>>>>> refs/remotes/origin/main
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Eye, EyeOff, Loader2, Check, X } from "lucide-react"
-<<<<<<< HEAD
-import { signup, loginWithGoogle } from "@/lib/actions/auth"
-
-function SubmitButton() {
-  const { pending } = useFormStatus()
-  return (
-    <Button
-      type="submit"
-      className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
-      disabled={pending}
-    >
-      {pending ? (
-        <>
-          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-          Creating your vault...
-        </>
-      ) : (
-        "Create account"
-      )}
-    </Button>
-  )
-}
-=======
 import { signup } from "@/lib/actions/auth"
->>>>>>> refs/remotes/origin/main
 
 export function SignupForm() {
-  const [state, action] = useFormState(signup, undefined)
+  const router = useRouter()
   const [showPassword, setShowPassword] = useState(false)
   const [password, setPassword] = useState("")
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    acceptTerms: false,
+  })
+  const [error, setError] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
 
   const passwordRequirements = [
     { label: "At least 8 characters", met: password.length >= 8 },
@@ -50,8 +30,6 @@ export function SignupForm() {
     { label: "Contains uppercase letter", met: /[A-Z]/.test(password) },
   ]
 
-<<<<<<< HEAD
-=======
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError("")
@@ -90,15 +68,24 @@ export function SignupForm() {
 
   const handleGoogleSignIn = async () => {
     setIsLoading(true)
-    await signIn("google", { callbackUrl: "/dashboard" })
+    try {
+      const result = await signIn("google", { callbackUrl: "/dashboard", redirect: false })
+      if (result?.error) {
+        setError(result.error)
+      } else if (result?.url) {
+        router.push(result.url)
+      }
+    } catch (error) {
+      setError("An unexpected error occurred during Google sign-in. Please try again.")
+    } finally {
+      setIsLoading(false)
+    }
   }
-
->>>>>>> refs/remotes/origin/main
   return (
-    <form action={action} className="space-y-6">
-      {state?.error && (
+    <form onSubmit={handleSubmit} className="space-y-6">
+      {error && (
         <div className="p-3 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-sm">
-          {state.error}
+          {error}
         </div>
       )}
 
@@ -109,6 +96,8 @@ export function SignupForm() {
           name="name"
           type="text"
           placeholder="Enter your name"
+          value={formData.name}
+          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
           className="bg-input border-border focus:border-primary focus:ring-primary"
           required
         />
@@ -121,6 +110,8 @@ export function SignupForm() {
           name="email"
           type="email"
           placeholder="you@example.com"
+          value={formData.email}
+          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
           className="bg-input border-border focus:border-primary focus:ring-primary"
           required
         />
@@ -135,7 +126,10 @@ export function SignupForm() {
             type={showPassword ? "text" : "password"}
             placeholder="Create a strong password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => {
+              setPassword(e.target.value)
+              setFormData({ ...formData, password: e.target.value })
+            }}
             className="bg-input border-border focus:border-primary focus:ring-primary pr-10"
             required
           />
@@ -171,7 +165,14 @@ export function SignupForm() {
       </div>
 
       <div className="flex items-start gap-2">
-        <Checkbox id="terms" name="acceptTerms" className="mt-1" required />
+        <Checkbox
+          id="terms"
+          name="acceptTerms"
+          checked={formData.acceptTerms}
+          onCheckedChange={(checked) => setFormData({ ...formData, acceptTerms: checked as boolean })}
+          className="mt-1"
+          required
+        />
         <Label htmlFor="terms" className="text-sm text-muted-foreground font-normal leading-relaxed">
           I agree to the{" "}
           <a href="/terms" className="text-primary hover:underline">
@@ -184,7 +185,20 @@ export function SignupForm() {
         </Label>
       </div>
 
-      <SubmitButton />
+      <Button
+        type="submit"
+        className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
+        disabled={isLoading}
+      >
+        {isLoading ? (
+          <>
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            Creating your vault...
+          </>
+        ) : (
+          "Create account"
+        )}
+      </Button>
 
       <div className="relative">
         <div className="absolute inset-0 flex items-center">
@@ -199,12 +213,8 @@ export function SignupForm() {
         type="button"
         variant="outline"
         className="w-full neon-border bg-transparent hover:bg-primary/10"
-<<<<<<< HEAD
-        onClick={() => loginWithGoogle()}
-=======
         onClick={handleGoogleSignIn}
         disabled={isLoading}
->>>>>>> refs/remotes/origin/main
       >
         <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
           <path

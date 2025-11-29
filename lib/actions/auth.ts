@@ -15,6 +15,11 @@ const SignupSchema = z.object({
     .regex(/[A-Z]/, "Password must contain an uppercase letter"),
 })
 
+const LoginSchema = z.object({
+  email: z.string().email("Invalid email address"),
+  password: z.string().min(1, "Password is required"),
+})
+
 export async function signup(formData: unknown) {
   const validatedFields = SignupSchema.safeParse(formData)
 
@@ -44,6 +49,43 @@ export async function signup(formData: unknown) {
   } catch (error) {
     if (error instanceof AuthError) {
       throw error // Rethrow AuthError
+    }
+    if (error instanceof Error) {
+      console.error('Signup error:', error)
+    }
+    return { error: "An unexpected error occurred" }
+  }
+}
+
+export async function login(formData: unknown) {
+  const validatedFields = LoginSchema.safeParse(formData)
+
+  if (!validatedFields.success) {
+    return { error: "Invalid fields" }
+  }
+
+  const { email, password } = validatedFields.data
+
+  try {
+    const user = await prisma.user.findUnique({ where: { email } })
+
+    if (!user || !user.password) {
+      return { error: "Invalid email or password" }
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password)
+
+    if (!isPasswordValid) {
+      return { error: "Invalid email or password" }
+    }
+
+    return { success: "Login successful" }
+  } catch (error) {
+    if (error instanceof AuthError) {
+      throw error
+    }
+    if (error instanceof Error) {
+      console.error('Login error:', error)
     }
     return { error: "An unexpected error occurred" }
   }
