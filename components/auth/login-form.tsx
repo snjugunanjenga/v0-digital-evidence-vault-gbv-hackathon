@@ -2,48 +2,23 @@
 
 import type React from "react"
 import { useState } from "react"
-<<<<<<< HEAD
-import { useFormState, useFormStatus } from "react-dom"
-=======
 import { useRouter } from "next/navigation"
 import { signIn } from "next-auth/react"
->>>>>>> refs/remotes/origin/main
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Eye, EyeOff, Loader2 } from "lucide-react"
-import { login, loginWithGoogle } from "@/lib/actions/auth"
-
-function SubmitButton() {
-  const { pending } = useFormStatus()
-  return (
-    <Button
-      type="submit"
-      className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
-      disabled={pending}
-    >
-      {pending ? (
-        <>
-          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-          Signing in...
-        </>
-      ) : (
-        "Sign in"
-      )}
-    </Button>
-  )
-}
+import { login } from "@/lib/actions/auth"
 
 export function LoginForm() {
-  const [state, action] = useFormState(login, undefined)
+  const router = useRouter()
   const [showPassword, setShowPassword] = useState(false)
-<<<<<<< HEAD
-=======
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   })
   const [error, setError] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -68,18 +43,23 @@ export function LoginForm() {
       setIsLoading(false)
     }
   }
->>>>>>> refs/remotes/origin/main
 
   const handleGoogleSignIn = async () => {
-    setIsLoading(true)
-    await signIn("google", { callbackUrl: "/dashboard" })
-  }
+    setIsLoading(true);
+    try {
+      await signIn("google", { callbackUrl: "/dashboard" });
+    } catch (error) {
+      setError("An unexpected error occurred during Google sign-in. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
-    <form action={action} className="space-y-6">
-      {state?.error && (
+    <form onSubmit={handleSubmit} className="space-y-6">
+      {error && (
         <div className="p-3 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-sm">
-          {state.error}
+          {error}
         </div>
       )}
 
@@ -90,6 +70,8 @@ export function LoginForm() {
           name="email"
           type="email"
           placeholder="you@example.com"
+          value={formData.email}
+          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
           className="bg-input border-border focus:border-primary focus:ring-primary"
           required
         />
@@ -108,6 +90,8 @@ export function LoginForm() {
             name="password"
             type={showPassword ? "text" : "password"}
             placeholder="Enter your password"
+            value={formData.password}
+            onChange={(e) => setFormData({ ...formData, password: e.target.value })}
             className="bg-input border-border focus:border-primary focus:ring-primary pr-10"
             required
           />
@@ -127,7 +111,20 @@ export function LoginForm() {
         </div>
       </div>
 
-      <SubmitButton />
+      <Button
+        type="submit"
+        className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
+        disabled={isLoading}
+      >
+        {isLoading ? (
+          <>
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            Signing in...
+          </>
+        ) : (
+          "Sign in"
+        )}
+      </Button>
 
       <div className="relative">
         <div className="absolute inset-0 flex items-center">
@@ -142,12 +139,8 @@ export function LoginForm() {
         type="button"
         variant="outline"
         className="w-full neon-border bg-transparent hover:bg-primary/10"
-<<<<<<< HEAD
-        onClick={() => loginWithGoogle()}
-=======
         onClick={handleGoogleSignIn}
         disabled={isLoading}
->>>>>>> refs/remotes/origin/main
       >
         <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
           <path

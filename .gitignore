@@ -21,3 +21,4 @@ build/
 # lock files (if you don't want these in VCS)
 pnpm-lock.yaml
 package-lock.json
+tsconfig.tsbuildinfo
