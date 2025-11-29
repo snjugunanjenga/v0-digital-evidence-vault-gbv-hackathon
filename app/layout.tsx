@@ -1,7 +1,7 @@
 import type React from "react"
 import type { Metadata } from "next"
 import { Inter, Geist_Mono } from "next/font/google"
-import { Analytics } from "@vercel/analytics/next"
+import AnalyticsClient from "@/components/analytics-client"
 import "./globals.css"
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
@@ -38,9 +38,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <body className={`${inter.variable} ${geistMono.variable} font-sans antialiased`}>
+      <body data-testim-main-word-scripts-loaded="true" className={`${inter.variable} ${geistMono.variable} font-sans antialiased`}>
         {children}
-        <Analytics />
+        {/* Client-only analytics component (prevents SSR/client attribute mismatches) */}
+        <AnalyticsClient />
       </body>
     </html>
   )

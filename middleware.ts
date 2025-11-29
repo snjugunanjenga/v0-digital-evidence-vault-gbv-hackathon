@@ -1,13 +1,11 @@
-import { auth } from "@/auth"
 import { NextResponse } from "next/server"
 
-export default auth((req) => {
-  const isLoggedIn = !!req.auth
-  const isOnDashboard = req.nextUrl.pathname.startsWith("/dashboard")
-  const isOnAuth =
-    req.nextUrl.pathname.startsWith("/login") ||
-    req.nextUrl.pathname.startsWith("/signup") ||
-    req.nextUrl.pathname.startsWith("/forgot-password")
+export default function middleware(req: Request & { nextUrl: URL; cookies: any }) {
+  const cookie = req.cookies?.get?.("next-auth.session-token") ?? req.cookies?.get?.("__Secure-next-auth.session-token")
+  const isLoggedIn = !!(cookie && cookie.value)
+  const pathname = req.nextUrl.pathname
+  const isOnDashboard = pathname.startsWith("/dashboard")
+  const isOnAuth = pathname.startsWith("/login") || pathname.startsWith("/signup") || pathname.startsWith("/forgot-password")
 
   if (isOnDashboard && !isLoggedIn) {
     return NextResponse.redirect(new URL("/login", req.nextUrl))
@@ -18,7 +16,7 @@ export default auth((req) => {
   }
 
   return NextResponse.next()
-})
+}
 
 export const config = {
   matcher: ["/dashboard/:path*", "/login", "/signup", "/forgot-password"],

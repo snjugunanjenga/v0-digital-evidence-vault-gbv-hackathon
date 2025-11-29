@@ -1,0 +1,399 @@
+[00:00:02.855] Server  ERROR    ⨯ ./node_modules/@prisma/client/default.js:2:6
+Module not found: Can't resolve '.prisma/client/default'
+  1 | module.exports = {
+> 2 |   ...require('.prisma/client/default'),
+    |      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  3 | }
+  4 |
+
+
+
+Import trace:
+  Edge Middleware:
+    ./node_modules/@prisma/client/default.js
+    ./lib/prisma.ts
+    ./auth.ts
+    ./middleware.ts
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+[00:00:02.881] Server  LOG     
+[00:00:02.881] Server  LOG        We detected TypeScript in your project and reconfigured your tsconfig.json file for you.
+[00:00:02.881] Server  LOG        The following suggested values were added to your tsconfig.json. These values can be changed to fit your project's needs:
+
+[00:00:02.881] Server  LOG        	- include was updated to add '.next/dev/types/**/*.ts'
+[00:00:02.881] Server  LOG     
+[00:00:02.882] Server  LOG        The following mandatory changes were made to your tsconfig.json:
+
+[00:00:02.882] Server  LOG        	- jsx was set to react-jsx (next.js uses the React automatic runtime)
+[00:00:02.882] Server  LOG     
+[00:00:02.902] Server  WARN     ⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+[00:00:03.185] Server  LOG      ✓ Ready in 2.7s
+[00:01:16.432] Server  LOG      ○ Compiling / ...
+[00:01:28.766] Browser ERROR   uncaughtError: Error: ./node_modules/@prisma/client/default.js:2:6
+Module not found: Can't resolve '.prisma/client/default'
+  1 | module.exports = {
+> 2 |   ...require('.prisma/client/default'),
+    |      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  3 | }
+  4 |
+
+
+
+Import trace:
+  Edge Middleware:
+    ./node_modules/@prisma/client/default.js
+    ./lib/prisma.ts
+    ./auth.ts
+    ./middleware.ts
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+[00:01:29.338] Browser ERROR   ./node_modules/@prisma/client/default.js:2:6
+Module not found: Can't resolve '.prisma/client/default'
+  1 | module.exports = {
+> 2 |   ...require('.prisma/client/default'),
+    |      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  3 | }
+  4 |
+
+Import trace:
+  Edge Middleware:
+    ./node_modules/@prisma/client/default.js
+    ./lib/prisma.ts
+    ./auth.ts
+    ./middleware.ts
+
+https://nextjs.org/docs/messages/module-not-found
+[00:01:29.338] Browser ERROR   ./node_modules/@prisma/client/default.js:2:6
+Module not found: Can't resolve '.prisma/client/default'
+  1 | module.exports = {
+> 2 |   ...require('.prisma/client/default'),
+    |      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  3 | }
+  4 |
+
+Import trace:
+  Edge Middleware:
+    ./node_modules/@prisma/client/default.js
+    ./lib/prisma.ts
+    ./auth.ts
+    ./middleware.ts
+
+https://nextjs.org/docs/messages/module-not-found
+[00:05:07.860] Server  LOG      ✓ Compiled in 174ms
+[00:05:26.188] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:05:26.188] Browser ERROR   A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+%s%s https://react.dev/link/hydration-mismatch 
+
+  ...
+    <HotReload globalError={[...]} webSocket={WebSocket} staticIndicatorState={{pathname:null, ...}}>
+      <AppDevOverlayErrorBoundary globalError={[...]}>
+        <ReplaySsrOnlyErrors>
+        <DevRootHTTPAccessFallbackBoundary>
+          <HTTPAccessFallbackBoundary notFound={<NotAllowedRootHTTPFallbackError>}>
+            <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<NotAllowedRootHTTPFallbackError>} ...>
+              <RedirectBoundary>
+                <RedirectErrorBoundary router={{...}}>
+                  <Head>
+                  <__next_root_layout_boundary__>
+                    <SegmentViewNode type="layout" pagePath="layout.tsx">
+                      <SegmentTrieNode>
+                      <link>
+                      <script>
+                      <script>
+                      <RootLayout>
+                        <html lang="en" className="dark">
+                          <body
+                            className="inter_5901b7c6-module__ec5Qua__variable geist_mono_d6617093-module__z61v7q__var..."
+-                           data-testim-main-word-scripts-loaded="true"
+                          >
+                  ...
+
+[00:05:26.188] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[00:05:26.188] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/","route":"/"}
+[00:05:26.189] Browser LOG     %c[Vercel Web Analytics]%c [pageview] https://turbo-memory-9pqjgq75jxqcppgp-3000.app.github.dev/ color: rgb(120, 120, 120) color: inherit {"dp":"/","o":"https://turbo-memory-9pqjgq75jxqcppgp-3000.app.github.dev/","sdkn":"@vercel/analytics/next","sdkv":"1.5.0","sv":"0.1.3","ts":1764407942346}
+[00:08:09.329] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:08:09.901] Browser ERROR   A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+%s%s https://react.dev/link/hydration-mismatch 
+
+  ...
+    <HotReload globalError={[...]} webSocket={WebSocket} staticIndicatorState={{pathname:null, ...}}>
+      <AppDevOverlayErrorBoundary globalError={[...]}>
+        <ReplaySsrOnlyErrors>
+        <DevRootHTTPAccessFallbackBoundary>
+          <HTTPAccessFallbackBoundary notFound={<NotAllowedRootHTTPFallbackError>}>
+            <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<NotAllowedRootHTTPFallbackError>} ...>
+              <RedirectBoundary>
+                <RedirectErrorBoundary router={{...}}>
+                  <Head>
+                  <__next_root_layout_boundary__>
+                    <SegmentViewNode type="layout" pagePath="layout.tsx">
+                      <SegmentTrieNode>
+                      <link>
+                      <script>
+                      <script>
+                      <RootLayout>
+                        <html lang="en" className="dark">
+                          <body
+                            className="inter_5901b7c6-module__ec5Qua__variable geist_mono_d6617093-module__z61v7q__var..."
+-                           data-testim-main-word-scripts-loaded="true"
+                          >
+                  ...
+
+[00:08:09.901] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[00:08:09.901] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/","route":"/"}
+[00:08:09.901] Browser LOG     %c[Vercel Web Analytics]%c [pageview] https://turbo-memory-9pqjgq75jxqcppgp-3000.app.github.dev/ color: rgb(120, 120, 120) color: inherit {"dp":"/","o":"https://turbo-memory-9pqjgq75jxqcppgp-3000.app.github.dev/","r":"https://turbo-memory-9pqjgq75jxqcppgp.github.dev/","sdkn":"@vercel/analytics/next","sdkv":"1.5.0","sv":"0.1.3","ts":1764408106551}
+[00:10:00.334] Server  LOG      ✓ Compiled in 366ms
+[00:10:02.331] Browser ERROR   ./app/layout.tsx:46:11
+Ecmascript file had an error
+  44 |         {typeof window !== "undefined" ? (
+  45 |           // dynamically import Analytics with no SSR so it doesn't affect server HTML
+> 46 |           dynamic(() => import("@vercel/analytics/next").then((m) => m.Analytics), { ssr: false })
+     |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  47 |         ) : null}
+  48 |       </body>
+  49 |     </html>
+
+`ssr: false` is not allowed with `next/dynamic` in Server Components. Please move it into a Client Component.
+[00:10:07.310] Browser ERROR   ./app/layout.tsx:46:11
+Ecmascript file had an error
+  44 |         {typeof window !== "undefined" ? (
+  45 |           // dynamically import Analytics with no SSR so it doesn't affect server HTML
+> 46 |           dynamic(() => import("@vercel/analytics/next").then((m) => m.Analytics), { ssr: false })
+     |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  47 |         ) : null}
+  48 |       </body>
+  49 |     </html>
+
+`ssr: false` is not allowed with `next/dynamic` in Server Components. Please move it into a Client Component.
+[00:10:35.522] Server  ERROR    ⨯ ./app/layout.tsx:46:11
+Ecmascript file had an error
+  44 |         {typeof window !== "undefined" ? (
+  45 |           // dynamically import Analytics with no SSR so it doesn't affect server HTML
+> 46 |           dynamic(() => import("@vercel/analytics/next").then((m) => m.Analytics), { ssr: false })
+     |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  47 |         ) : null}
+  48 |       </body>
+  49 |     </html>
+
+`ssr: false` is not allowed with `next/dynamic` in Server Components. Please move it into a Client Component.
+
+
+[00:10:42.222] Browser ERROR   uncaughtError: Error: ./app/layout.tsx:46:11
+Ecmascript file had an error
+  44 |         {typeof window !== "undefined" ? (
+  45 |           // dynamically import Analytics with no SSR so it doesn't affect server HTML
+> 46 |           dynamic(() => import("@vercel/analytics/next").then((m) => m.Analytics), { ssr: false })
+     |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  47 |         ) : null}
+  48 |       </body>
+  49 |     </html>
+
+`ssr: false` is not allowed with `next/dynamic` in Server Components. Please move it into a Client Component.
+
+
+[00:10:42.519] Browser ERROR   ./app/layout.tsx:46:11
+Ecmascript file had an error
+  44 |         {typeof window !== "undefined" ? (
+  45 |           // dynamically import Analytics with no SSR so it doesn't affect server HTML
+> 46 |           dynamic(() => import("@vercel/analytics/next").then((m) => m.Analytics), { ssr: false })
+     |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  47 |         ) : null}
+  48 |       </body>
+  49 |     </html>
+
+`ssr: false` is not allowed with `next/dynamic` in Server Components. Please move it into a Client Component.
+[00:10:43.002] Browser ERROR   ./app/layout.tsx:46:11
+Ecmascript file had an error
+  44 |         {typeof window !== "undefined" ? (
+  45 |           // dynamically import Analytics with no SSR so it doesn't affect server HTML
+> 46 |           dynamic(() => import("@vercel/analytics/next").then((m) => m.Analytics), { ssr: false })
+     |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  47 |         ) : null}
+  48 |       </body>
+  49 |     </html>
+
+`ssr: false` is not allowed with `next/dynamic` in Server Components. Please move it into a Client Component.
+[00:11:54.304] Browser ERROR   ./app/layout.tsx:46:11
+Ecmascript file had an error
+  44 |         {typeof window !== "undefined" ? (
+  45 |           // dynamically import Analytics with no SSR so it doesn't affect server HTML
+> 46 |           dynamic(() => import("@vercel/analytics/next").then((m) => m.Analytics), { ssr: false })
+     |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  47 |         ) : null}
+  48 |       </body>
+  49 |     </html>
+
+`ssr: false` is not allowed with `next/dynamic` in Server Components. Please move it into a Client Component.
+[00:11:55.294] Browser ERROR   ./app/layout.tsx:46:11
+Ecmascript file had an error
+  44 |         {typeof window !== "undefined" ? (
+  45 |           // dynamically import Analytics with no SSR so it doesn't affect server HTML
+> 46 |           dynamic(() => import("@vercel/analytics/next").then((m) => m.Analytics), { ssr: false })
+     |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  47 |         ) : null}
+  48 |       </body>
+  49 |     </html>
+
+`ssr: false` is not allowed with `next/dynamic` in Server Components. Please move it into a Client Component.
+[00:12:01.080] Server  LOG      ✓ Compiled in 180ms
+[00:12:01.306] Browser ERROR   ./app/layout.tsx:46:11
+Ecmascript file had an error
+  44 |         {typeof window !== "undefined" ? (
+  45 |           // dynamically import Analytics with no SSR so it doesn't affect server HTML
+> 46 |           dynamic(() => import("@vercel/analytics/next").then((m) => m.Analytics), { ssr: false })
+     |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  47 |         ) : null}
+  48 |       </body>
+  49 |     </html>
+
+`ssr: false` is not allowed with `next/dynamic` in Server Components. Please move it into a Client Component.
+[00:12:16.342] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:12:16.342] Browser ERROR   A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+%s%s https://react.dev/link/hydration-mismatch 
+
+  ...
+    <HotReload globalError={[...]} webSocket={WebSocket} staticIndicatorState={{pathname:null, ...}}>
+      <AppDevOverlayErrorBoundary globalError={[...]}>
+        <ReplaySsrOnlyErrors>
+        <DevRootHTTPAccessFallbackBoundary>
+          <HTTPAccessFallbackBoundary notFound={<NotAllowedRootHTTPFallbackError>}>
+            <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<NotAllowedRootHTTPFallbackError>} ...>
+              <RedirectBoundary>
+                <RedirectErrorBoundary router={{...}}>
+                  <Head>
+                  <__next_root_layout_boundary__>
+                    <SegmentViewNode type="layout" pagePath="layout.tsx">
+                      <SegmentTrieNode>
+                      <link>
+                      <script>
+                      <script>
+                      <RootLayout>
+                        <html lang="en" className="dark">
+                          <body
+                            className="inter_5901b7c6-module__ec5Qua__variable geist_mono_d6617093-module__z61v7q__var..."
+-                           data-testim-main-word-scripts-loaded="true"
+                          >
+                            ...
+                              <Primitive.button.Slot type="button" aria-haspopup="dialog" aria-expanded={false} ...>
+                                <Primitive.button.SlotClone type="button" aria-haspopup="dialog" aria-expanded={false} ...>
+                                  <Button variant="ghost" size="icon" type="button" aria-haspopup="dialog" ...>
+                                    <button
+                                      data-slot="sheet-trigger"
+                                      className={"inline-flex items-center justify-center gap-2 whitespace-nowrap rou..."}
+                                      type="button"
+                                      aria-haspopup="dialog"
+                                      aria-expanded={false}
++                                     aria-controls="radix-_R_4indlb_"
+-                                     aria-controls="radix-_R_11indlb_"
+                                      data-state="closed"
+                                      onClick={function handleEvent}
+                                      ref={function}
+                                    >
+                            ...
+                  ...
+
+[00:12:16.342] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[00:12:16.342] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/","route":"/"}
+[00:12:16.342] Browser LOG     %c[Vercel Web Analytics]%c [pageview] https://turbo-memory-9pqjgq75jxqcppgp-3000.app.github.dev/ color: rgb(120, 120, 120) color: inherit {"dp":"/","o":"https://turbo-memory-9pqjgq75jxqcppgp-3000.app.github.dev/","sdkn":"@vercel/analytics/next","sdkv":"1.5.0","sv":"0.1.3","ts":1764408352890}
+[00:16:36.708] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:16:37.611] Browser ERROR   A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+%s%s https://react.dev/link/hydration-mismatch 
+
+  ...
+    <HotReload globalError={[...]} webSocket={WebSocket} staticIndicatorState={{pathname:null, ...}}>
+      <AppDevOverlayErrorBoundary globalError={[...]}>
+        <ReplaySsrOnlyErrors>
+        <DevRootHTTPAccessFallbackBoundary>
+          <HTTPAccessFallbackBoundary notFound={<NotAllowedRootHTTPFallbackError>}>
+            <HTTPAccessFallbackErrorBoundary pathname="/" notFound={<NotAllowedRootHTTPFallbackError>} ...>
+              <RedirectBoundary>
+                <RedirectErrorBoundary router={{...}}>
+                  <Head>
+                  <__next_root_layout_boundary__>
+                    <SegmentViewNode type="layout" pagePath="layout.tsx">
+                      <SegmentTrieNode>
+                      <link>
+                      <script>
+                      <script>
+                      <RootLayout>
+                        <html lang="en" className="dark">
+                          <body
+                            className="inter_5901b7c6-module__ec5Qua__variable geist_mono_d6617093-module__z61v7q__var..."
+-                           data-testim-main-word-scripts-loaded="true"
+                          >
+                  ...
+
+[00:16:37.843] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[00:16:37.843] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/","route":"/"}
+[00:16:37.843] Browser LOG     %c[Vercel Web Analytics]%c [pageview] https://turbo-memory-9pqjgq75jxqcppgp-3000.app.github.dev/ color: rgb(120, 120, 120) color: inherit {"dp":"/","o":"https://turbo-memory-9pqjgq75jxqcppgp-3000.app.github.dev/","sdkn":"@vercel/analytics/next","sdkv":"1.5.0","sv":"0.1.3","ts":1764408614432}
+[00:20:18.943] Server  LOG      ✓ Compiled in 54ms
+[00:24:24.493] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:24:24.493] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[00:24:24.493] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/","route":"/"}
+[00:24:24.493] Browser LOG     %c[Vercel Web Analytics]%c [pageview] https://turbo-memory-9pqjgq75jxqcppgp-3000.app.github.dev/ color: rgb(120, 120, 120) color: inherit {"dp":"/","o":"https://turbo-memory-9pqjgq75jxqcppgp-3000.app.github.dev/","sdkn":"@vercel/analytics/next","sdkv":"1.5.0","sv":"0.1.3","ts":1764409080500}
+[00:25:21.733] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:25:22.725] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[00:25:22.725] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/","route":"/"}
+[00:25:22.725] Browser LOG     %c[Vercel Web Analytics]%c [pageview] https://turbo-memory-9pqjgq75jxqcppgp-3000.app.github.dev/ color: rgb(120, 120, 120) color: inherit {"dp":"/","o":"https://turbo-memory-9pqjgq75jxqcppgp-3000.app.github.dev/","r":"https://turbo-memory-9pqjgq75jxqcppgp.github.dev/","sdkn":"@vercel/analytics/next","sdkv":"1.5.0","sv":"0.1.3","ts":1764409139346}
+[00:27:13.199] Browser LOG     %c[Vercel Web Analytics]%c [pageview] https://turbo-memory-9pqjgq75jxqcppgp-3000.app.github.dev/contact color: rgb(120, 120, 120) color: inherit {"dp":"/contact","o":"https://turbo-memory-9pqjgq75jxqcppgp-3000.app.github.dev/contact","sdkn":"@vercel/analytics/next","sdkv":"1.5.0","sv":"0.1.3","ts":1764409249748}
+[00:28:03.129] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:28:03.129] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[00:28:03.129] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/contact","route":"/contact"}
+[00:28:03.129] Browser LOG     %c[Vercel Web Analytics]%c [pageview] https://turbo-memory-9pqjgq75jxqcppgp-3000.app.github.dev/contact#features color: rgb(120, 120, 120) color: inherit {"dp":"/contact","o":"https://turbo-memory-9pqjgq75jxqcppgp-3000.app.github.dev/contact#features","r":"","sdkn":"@vercel/analytics/next","sdkv":"1.5.0","sv":"0.1.3","ts":1764409298368}
+[00:28:24.747] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:28:24.747] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[00:28:24.747] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/features","route":"/features"}
+[00:28:24.747] Browser LOG     %c[Vercel Web Analytics]%c [pageview] https://turbo-memory-9pqjgq75jxqcppgp-3000.app.github.dev/features color: rgb(120, 120, 120) color: inherit {"dp":"/features","o":"https://turbo-memory-9pqjgq75jxqcppgp-3000.app.github.dev/features","r":"","sdkn":"@vercel/analytics/next","sdkv":"1.5.0","sv":"0.1.3","ts":1764409319774}
+[00:28:30.578] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:28:30.578] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[00:28:30.578] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/contact","route":"/contact"}
+[00:28:30.578] Browser LOG     %c[Vercel Web Analytics]%c [pageview] https://turbo-memory-9pqjgq75jxqcppgp-3000.app.github.dev/contact#how-it-works color: rgb(120, 120, 120) color: inherit {"dp":"/contact","o":"https://turbo-memory-9pqjgq75jxqcppgp-3000.app.github.dev/contact#how-it-works","r":"","sdkn":"@vercel/analytics/next","sdkv":"1.5.0","sv":"0.1.3","ts":1764409325800}
+[00:28:30.944] Browser LOG     %c[Vercel Web Analytics]%c [pageview] https://turbo-memory-9pqjgq75jxqcppgp-3000.app.github.dev/#how-it-works color: rgb(120, 120, 120) color: inherit {"dp":"/","o":"https://turbo-memory-9pqjgq75jxqcppgp-3000.app.github.dev/#how-it-works","sdkn":"@vercel/analytics/next","sdkv":"1.5.0","sv":"0.1.3","ts":1764409327578}
+[00:30:59.345] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:30:59.345] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[00:30:59.345] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/","route":"/"}
+[00:30:59.345] Browser LOG     %c[Vercel Web Analytics]%c [pageview] https://turbo-memory-9pqjgq75jxqcppgp-3000.app.github.dev/ color: rgb(120, 120, 120) color: inherit {"dp":"/","o":"https://turbo-memory-9pqjgq75jxqcppgp-3000.app.github.dev/","r":"https://turbo-memory-9pqjgq75jxqcppgp.github.dev/","sdkn":"@vercel/analytics/next","sdkv":"1.5.0","sv":"0.1.3","ts":1764409475410}
+[00:31:34.329] Browser LOG     %c[Vercel Web Analytics]%c [pageview] https://turbo-memory-9pqjgq75jxqcppgp-3000.app.github.dev/login color: rgb(120, 120, 120) color: inherit {"dp":"/login","o":"https://turbo-memory-9pqjgq75jxqcppgp-3000.app.github.dev/login","sdkn":"@vercel/analytics/next","sdkv":"1.5.0","sv":"0.1.3","ts":1764409510973}
+[00:31:40.038] Browser LOG     %c[Vercel Web Analytics]%c [pageview] https://turbo-memory-9pqjgq75jxqcppgp-3000.app.github.dev/ color: rgb(120, 120, 120) color: inherit {"dp":"/","o":"https://turbo-memory-9pqjgq75jxqcppgp-3000.app.github.dev/","sdkn":"@vercel/analytics/next","sdkv":"1.5.0","sv":"0.1.3","ts":1764409516714}
+[00:31:49.312] Browser LOG     %c[Vercel Web Analytics]%c [pageview] https://turbo-memory-9pqjgq75jxqcppgp-3000.app.github.dev/signup color: rgb(120, 120, 120) color: inherit {"dp":"/signup","o":"https://turbo-memory-9pqjgq75jxqcppgp-3000.app.github.dev/signup","sdkn":"@vercel/analytics/next","sdkv":"1.5.0","sv":"0.1.3","ts":1764409525938}
+[00:32:07.832] Browser LOG     %c[Vercel Web Analytics]%c [pageview] https://turbo-memory-9pqjgq75jxqcppgp-3000.app.github.dev/ color: rgb(120, 120, 120) color: inherit {"dp":"/","o":"https://turbo-memory-9pqjgq75jxqcppgp-3000.app.github.dev/","sdkn":"@vercel/analytics/next","sdkv":"1.5.0","sv":"0.1.3","ts":1764409544432}
