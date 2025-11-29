@@ -1,6 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 28, "column": 0}, "map": {"version":3,"sources":["file:///workspaces/v0-digital-evidence-vault-gbv-hackathon/components/analytics-client.tsx"],"sourcesContent":["\"use client\"\n\nimport { Analytics } from \"@vercel/analytics/next\"\n\nexport default function AnalyticsClient() {\n  return <Analytics />\n}\n"],"names":[],"mappings":";;;;;AAEA;AAFA;;;AAIe,SAAS;IACtB,qBAAO,8OAAC,4KAAS;;;;;AACnB"}}]
-}

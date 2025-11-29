@@ -1,0 +1,45 @@
+{
+  "version": 3,
+  "middleware": {
+    "/": {
+      "files": [
+        "server/edge/chunks/edge-wrapper_0b0266f1.js",
+        "server/edge/chunks/[root-of-the-server]__db54bf8a._.js",
+        "server/edge/chunks/turbopack-edge-wrapper_5b67d8fb.js"
+      ],
+      "name": "middleware",
+      "page": "/",
+      "matchers": [
+        {
+          "regexp": "^(?:\\/(_next\\/data\\/[^/]{1,}))?\\/dashboard(?:\\/((?:[^\\/#\\?]+?)(?:\\/(?:[^\\/#\\?]+?))*))?(\\\\.json)?[\\/#\\?]?$",
+          "originalSource": "/dashboard/:path*"
+        },
+        {
+          "regexp": "^(?:\\/(_next\\/data\\/[^/]{1,}))?\\/login(\\\\.json)?[\\/#\\?]?$",
+          "originalSource": "/login"
+        },
+        {
+          "regexp": "^(?:\\/(_next\\/data\\/[^/]{1,}))?\\/signup(\\\\.json)?[\\/#\\?]?$",
+          "originalSource": "/signup"
+        },
+        {
+          "regexp": "^(?:\\/(_next\\/data\\/[^/]{1,}))?\\/forgot-password(\\\\.json)?[\\/#\\?]?$",
+          "originalSource": "/forgot-password"
+        }
+      ],
+      "wasm": [],
+      "assets": [],
+      "env": {
+        "__NEXT_BUILD_ID": "UIUstOu8jCtI8_z_vy9Zq",
+        "NEXT_SERVER_ACTIONS_ENCRYPTION_KEY": "A0uOlRiamu6OjdQHB+nSSH3xMw/JNNrjKx4y6o/poiI=",
+        "__NEXT_PREVIEW_MODE_ID": "4f513484f4cd1a9123c084efd29f016a",
+        "__NEXT_PREVIEW_MODE_ENCRYPTION_KEY": "a928c2a5137aacd4fedd4b487de279fc83c9e136fdda8e13dfca01eae1c0afbc",
+        "__NEXT_PREVIEW_MODE_SIGNING_KEY": "2ca4077784afdcb4d55674b64c83b1c94ed3b0cd0c9772e66259d77218003be4"
+      }
+    }
+  },
+  "sortedMiddleware": [
+    "/"
+  ],
+  "functions": {}
+}

@@ -1,4 +1,35 @@
 {
-  "node": {},
+  "node": {
+    "40bd90e711c35bfb0929e035a03d7d1bed04913c32": {
+      "workers": {
+        "app/signup/page": {
+          "moduleId": 21861,
+          "async": false,
+          "exportedName": "signup",
+          "filename": "lib/actions/auth.ts"
+        }
+      },
+      "layer": {
+        "app/signup/page": "action-browser"
+      },
+      "exportedName": "signup",
+      "filename": "lib/actions/auth.ts"
+    },
+    "006637cb3c0131ced68aa9cd118df31add723fdacf": {
+      "workers": {
+        "app/signup/page": {
+          "moduleId": 21861,
+          "async": false,
+          "exportedName": "loginWithGoogle",
+          "filename": "lib/actions/auth.ts"
+        }
+      },
+      "layer": {
+        "app/signup/page": "action-browser"
+      },
+      "exportedName": "loginWithGoogle",
+      "filename": "lib/actions/auth.ts"
+    }
+  },
   "edge": {}
 }

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { FolderOpen, FileCheck, Clock, Shield, Plus, ArrowRight } from "lucide-react"
 import type { Case, Evidence } from "@/lib/types"
+import type { Session } from "next-auth"
 
 // Mock data
 const mockStats = {
@@ -68,13 +69,18 @@ const mockRecentEvidence: Evidence[] = [
   },
 ]
 
-export function DashboardOverview() {
+interface DashboardOverviewProps {
+  session: Session | null
+}
+
+export function DashboardOverview({ session }: DashboardOverviewProps) {
+  const userName = session?.user?.name?.split(" ")[0] || "there"
   return (
     <div className="space-y-8">
       {/* Welcome */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Welcome back, Sarah</h1>
+          <h1 className="text-2xl font-bold text-foreground">Welcome back, {userName}</h1>
           <p className="text-muted-foreground">Your evidence vault is secure and up to date.</p>
         </div>
         <Button asChild className="bg-primary hover:bg-primary/90 text-primary-foreground">

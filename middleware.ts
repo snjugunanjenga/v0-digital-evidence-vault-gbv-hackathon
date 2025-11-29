@@ -21,3 +21,4 @@ export default function middleware(req: Request & { nextUrl: URL; cookies: any }
 export const config = {
   matcher: ["/dashboard/:path*", "/login", "/signup", "/forgot-password"],
 }
+

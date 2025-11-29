@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 21, "column": 0}, "map": {"version":3,"sources":["turbopack:///[project]/ (unsupported edge import 'http')"],"sourcesContent":["__turbopack_context__.n(__import_unsupported(`http`));\n"],"names":[],"mappings":"AAAA,sBAAsB,CAAC,CAAC,qBAAqB,CAAC,IAAI,CAAC"}},
+    {"offset": {"line": 25, "column": 0}, "map": {"version":3,"sources":["turbopack:///[project]/ (unsupported edge import 'crypto')"],"sourcesContent":["__turbopack_context__.n(__import_unsupported(`crypto`));\n"],"names":[],"mappings":"AAAA,sBAAsB,CAAC,CAAC,qBAAqB,CAAC,MAAM,CAAC"}},
+    {"offset": {"line": 35, "column": 0}, "map": {"version":3,"sources":["turbopack:///[project]/ (unsupported edge import 'querystring')"],"sourcesContent":["__turbopack_context__.n(__import_unsupported(`querystring`));\n"],"names":[],"mappings":"AAAA,sBAAsB,CAAC,CAAC,qBAAqB,CAAC,WAAW,CAAC"}},
+    {"offset": {"line": 39, "column": 0}, "map": {"version":3,"sources":["turbopack:///[project]/ (unsupported edge import 'https')"],"sourcesContent":["__turbopack_context__.n(__import_unsupported(`https`));\n"],"names":[],"mappings":"AAAA,sBAAsB,CAAC,CAAC,qBAAqB,CAAC,KAAK,CAAC"}},
+    {"offset": {"line": 50, "column": 0}, "map": {"version":3,"sources":["turbopack:///[project]/middleware.ts"],"sourcesContent":["import NextAuth from \"next-auth\"\nimport { authConfig } from \"./auth.config\"\n\nexport default NextAuth(authConfig).auth\n\nexport const config = {\n  // https://nextjs.org/docs/app/building-your-application/routing/middleware#matcher\n  matcher: [\"/((?!api|_next/static|_next/image|.*\\\\.png$).*)\"],\n}\n"],"names":[],"mappings":";;;;;;AAAA;;;;;;;;uCAGe,IAAA,wJAAQ,EAAC,YAAY,IAAI;AAEjC,MAAM,SAAS;IACpB,mFAAmF;IACnF,SAAS;QAAC;KAAkD;AAC9D"}}]
+}

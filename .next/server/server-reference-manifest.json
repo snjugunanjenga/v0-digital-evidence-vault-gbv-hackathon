@@ -1,0 +1,79 @@
+{
+  "node": {
+    "4010913bf5452638d38e30ae76abaf1f94084c2c5e": {
+      "workers": {
+        "app/auth/page": {
+          "moduleId": 67651,
+          "async": false,
+          "exportedName": "login",
+          "filename": "lib/actions/auth.ts"
+        },
+        "app/login/page": {
+          "moduleId": 22279,
+          "async": false,
+          "exportedName": "login",
+          "filename": "lib/actions/auth.ts"
+        }
+      },
+      "layer": {
+        "app/auth/page": "action-browser",
+        "app/login/page": "action-browser"
+      },
+      "filename": "lib/actions/auth.ts",
+      "exportedName": "login"
+    },
+    "006637cb3c0131ced68aa9cd118df31add723fdacf": {
+      "workers": {
+        "app/auth/page": {
+          "moduleId": 67651,
+          "async": false,
+          "exportedName": "loginWithGoogle",
+          "filename": "lib/actions/auth.ts"
+        },
+        "app/login/page": {
+          "moduleId": 22279,
+          "async": false,
+          "exportedName": "loginWithGoogle",
+          "filename": "lib/actions/auth.ts"
+        },
+        "app/signup/page": {
+          "moduleId": 21861,
+          "async": false,
+          "exportedName": "loginWithGoogle",
+          "filename": "lib/actions/auth.ts"
+        }
+      },
+      "layer": {
+        "app/auth/page": "action-browser",
+        "app/login/page": "action-browser",
+        "app/signup/page": "action-browser"
+      },
+      "filename": "lib/actions/auth.ts",
+      "exportedName": "loginWithGoogle"
+    },
+    "40bd90e711c35bfb0929e035a03d7d1bed04913c32": {
+      "workers": {
+        "app/auth/page": {
+          "moduleId": 67651,
+          "async": false,
+          "exportedName": "signup",
+          "filename": "lib/actions/auth.ts"
+        },
+        "app/signup/page": {
+          "moduleId": 21861,
+          "async": false,
+          "exportedName": "signup",
+          "filename": "lib/actions/auth.ts"
+        }
+      },
+      "layer": {
+        "app/auth/page": "action-browser",
+        "app/signup/page": "action-browser"
+      },
+      "filename": "lib/actions/auth.ts",
+      "exportedName": "signup"
+    }
+  },
+  "edge": {},
+  "encryptionKey": "A0uOlRiamu6OjdQHB+nSSH3xMw/JNNrjKx4y6o/poiI="
+}

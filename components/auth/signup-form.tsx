@@ -1,61 +1,51 @@
 "use client"
 
 import type React from "react"
-
 import { useState } from "react"
-import { useRouter } from "next/navigation"
+import { useFormState, useFormStatus } from "react-dom"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Eye, EyeOff, Loader2, Check, X } from "lucide-react"
+import { signup, loginWithGoogle } from "@/lib/actions/auth"
+
+function SubmitButton() {
+  const { pending } = useFormStatus()
+  return (
+    <Button
+      type="submit"
+      className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
+      disabled={pending}
+    >
+      {pending ? (
+        <>
+          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          Creating your vault...
+        </>
+      ) : (
+        "Create account"
+      )}
+    </Button>
+  )
+}
 
 export function SignupForm() {
-  const router = useRouter()
-  const [isLoading, setIsLoading] = useState(false)
+  const [state, action] = useFormState(signup, undefined)
   const [showPassword, setShowPassword] = useState(false)
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-    acceptTerms: false,
-  })
-  const [error, setError] = useState("")
+  const [password, setPassword] = useState("")
 
   const passwordRequirements = [
-    { label: "At least 8 characters", met: formData.password.length >= 8 },
-    { label: "Contains a number", met: /\d/.test(formData.password) },
-    { label: "Contains uppercase letter", met: /[A-Z]/.test(formData.password) },
+    { label: "At least 8 characters", met: password.length >= 8 },
+    { label: "Contains a number", met: /\d/.test(password) },
+    { label: "Contains uppercase letter", met: /[A-Z]/.test(password) },
   ]
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError("")
-
-    if (!formData.acceptTerms) {
-      setError("Please accept the terms and conditions")
-      return
-    }
-
-    if (!passwordRequirements.every((req) => req.met)) {
-      setError("Password does not meet requirements")
-      return
-    }
-
-    setIsLoading(true)
-
-    // Mock signup - replace with actual auth logic
-    await new Promise((resolve) => setTimeout(resolve, 1500))
-
-    // Simulate successful signup
-    router.push("/dashboard")
-  }
-
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      {error && (
+    <form action={action} className="space-y-6">
+      {state?.error && (
         <div className="p-3 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-sm">
-          {error}
+          {state.error}
         </div>
       )}
 
@@ -63,10 +53,9 @@ export function SignupForm() {
         <Label htmlFor="name">Full name</Label>
         <Input
           id="name"
+          name="name"
           type="text"
           placeholder="Enter your name"
-          value={formData.name}
-          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
           className="bg-input border-border focus:border-primary focus:ring-primary"
           required
         />
@@ -76,10 +65,9 @@ export function SignupForm() {
         <Label htmlFor="email">Email address</Label>
         <Input
           id="email"
+          name="email"
           type="email"
           placeholder="you@example.com"
-          value={formData.email}
-          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
           className="bg-input border-border focus:border-primary focus:ring-primary"
           required
         />
@@ -90,10 +78,11 @@ export function SignupForm() {
         <div className="relative">
           <Input
             id="password"
+            name="password"
             type={showPassword ? "text" : "password"}
             placeholder="Create a strong password"
-            value={formData.password}
-            onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             className="bg-input border-border focus:border-primary focus:ring-primary pr-10"
             required
           />
@@ -112,7 +101,7 @@ export function SignupForm() {
           </Button>
         </div>
         {/* Password Requirements */}
-        {formData.password && (
+        {password && (
           <div className="space-y-1 mt-2">
             {passwordRequirements.map((req, index) => (
               <div key={index} className="flex items-center gap-2 text-xs">
@@ -129,12 +118,7 @@ export function SignupForm() {
       </div>
 
       <div className="flex items-start gap-2">
-        <Checkbox
-          id="terms"
-          checked={formData.acceptTerms}
-          onCheckedChange={(checked) => setFormData({ ...formData, acceptTerms: checked as boolean })}
-          className="mt-1"
-        />
+        <Checkbox id="terms" name="acceptTerms" className="mt-1" required />
         <Label htmlFor="terms" className="text-sm text-muted-foreground font-normal leading-relaxed">
           I agree to the{" "}
           <a href="/terms" className="text-primary hover:underline">
@@ -147,20 +131,7 @@ export function SignupForm() {
         </Label>
       </div>
 
-      <Button
-        type="submit"
-        className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
-        disabled={isLoading}
-      >
-        {isLoading ? (
-          <>
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            Creating your vault...
-          </>
-        ) : (
-          "Create account"
-        )}
-      </Button>
+      <SubmitButton />
 
       <div className="relative">
         <div className="absolute inset-0 flex items-center">
@@ -175,7 +146,7 @@ export function SignupForm() {
         type="button"
         variant="outline"
         className="w-full neon-border bg-transparent hover:bg-primary/10"
-        disabled={isLoading}
+        onClick={() => loginWithGoogle()}
       >
         <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
           <path

@@ -1,46 +1,43 @@
 "use client"
 
 import type React from "react"
-
 import { useState } from "react"
-import { useRouter } from "next/navigation"
+import { useFormState, useFormStatus } from "react-dom"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Eye, EyeOff, Loader2 } from "lucide-react"
+import { login, loginWithGoogle } from "@/lib/actions/auth"
+
+function SubmitButton() {
+  const { pending } = useFormStatus()
+  return (
+    <Button
+      type="submit"
+      className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
+      disabled={pending}
+    >
+      {pending ? (
+        <>
+          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          Signing in...
+        </>
+      ) : (
+        "Sign in"
+      )}
+    </Button>
+  )
+}
 
 export function LoginForm() {
-  const router = useRouter()
-  const [isLoading, setIsLoading] = useState(false)
+  const [state, action] = useFormState(login, undefined)
   const [showPassword, setShowPassword] = useState(false)
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  })
-  const [error, setError] = useState("")
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError("")
-    setIsLoading(true)
-
-    // Mock authentication - replace with actual auth logic
-    await new Promise((resolve) => setTimeout(resolve, 1500))
-
-    // Simulate successful login
-    if (formData.email && formData.password) {
-      router.push("/dashboard")
-    } else {
-      setError("Please fill in all fields")
-      setIsLoading(false)
-    }
-  }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      {error && (
+    <form action={action} className="space-y-6">
+      {state?.error && (
         <div className="p-3 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-sm">
-          {error}
+          {state.error}
         </div>
       )}
 
@@ -48,10 +45,9 @@ export function LoginForm() {
         <Label htmlFor="email">Email address</Label>
         <Input
           id="email"
+          name="email"
           type="email"
           placeholder="you@example.com"
-          value={formData.email}
-          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
           className="bg-input border-border focus:border-primary focus:ring-primary"
           required
         />
@@ -67,10 +63,9 @@ export function LoginForm() {
         <div className="relative">
           <Input
             id="password"
+            name="password"
             type={showPassword ? "text" : "password"}
             placeholder="Enter your password"
-            value={formData.password}
-            onChange={(e) => setFormData({ ...formData, password: e.target.value })}
             className="bg-input border-border focus:border-primary focus:ring-primary pr-10"
             required
           />
@@ -90,20 +85,7 @@ export function LoginForm() {
         </div>
       </div>
 
-      <Button
-        type="submit"
-        className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
-        disabled={isLoading}
-      >
-        {isLoading ? (
-          <>
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            Signing in...
-          </>
-        ) : (
-          "Sign in"
-        )}
-      </Button>
+      <SubmitButton />
 
       <div className="relative">
         <div className="absolute inset-0 flex items-center">
@@ -118,7 +100,7 @@ export function LoginForm() {
         type="button"
         variant="outline"
         className="w-full neon-border bg-transparent hover:bg-primary/10"
-        disabled={isLoading}
+        onClick={() => loginWithGoogle()}
       >
         <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
           <path
