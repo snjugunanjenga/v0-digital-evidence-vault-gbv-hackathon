@@ -14,31 +14,30 @@ model User {
   emailVerified DateTime?
   image         String?
   password      String?
-
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
   accounts      Account[]
   sessions      Session[]
-  proofs        EvidenceProof[]
-  comments      Comment[] 
+  cases         Case[]
 }
 
 model Account {
-  id                 String  @id @default(cuid())
-  userId             String
-  type               String
-  provider           String
-  providerAccountId  String
-  refresh_token      String?  @db.Text
-  access_token       String?  @db.Text
-  expires_at         Int?
-  token_type         String?
-  scope              String?
-  id_token           String?  @db.Text
-  session_state      String?
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
-  @@index([userId])
 }
 
 model Session {
@@ -47,8 +46,6 @@ model Session {
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
 }
 
 model VerificationToken {
@@ -59,54 +56,23 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
-model Category {
-  id    String @id @default(cuid())
-  name  String @unique 
-
-  proofs EvidenceProof[] 
+model Case {
+  id          String    @id @default(cuid())
+  title       String
+  description String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  userId      String
+  user        User      @relation(fields: [userId], references: [id])
+  evidence    Evidence[]
 }
 
-model EvidenceProof {
-  id    String @id @default(cuid())
-
-  hash     String @unique @db.VarChar(64)
-
+model Evidence {
+  id          String    @id @default(cuid())
   fileName    String
-  fileSize    Float
-  fileMimeType String 
-  description String? 
-
-  categoryId String
-  category   Category @relation(fields: [categoryId], references: [id])
-
-  comments Comment[] 
-
-  isSharedForTrial Boolean @default(false)
-
-  recordedAt DateTime @default(now())
-
-  userId String
-  user   User   @relation(fields: [userId], references: [id])
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([userId])
-  @@index([categoryId])
-}
-
-model Comment {
-  id    String @id @default(cuid())
-  text  String @db.Text
-  
-  proofId String
-  proof   EvidenceProof @relation(fields: [proofId], references: [id])
-  
-  userId String
-  user   User   @relation(fields: [userId], references: [id])
-
-  createdAt DateTime @default(now())
-
-  @@index([proofId])
-  @@index([userId])
+  fileType    String
+  fileHash    String    @unique
+  uploadDate  DateTime  @default(now())
+  caseId      String
+  case        Case      @relation(fields: [caseId], references: [id])
 }

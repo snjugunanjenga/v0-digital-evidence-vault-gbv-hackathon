@@ -56,37 +56,3 @@ export async function signup(formData: unknown) {
     return { error: "An unexpected error occurred" }
   }
 }
-
-export async function login(formData: unknown) {
-  const validatedFields = LoginSchema.safeParse(formData)
-
-  if (!validatedFields.success) {
-    return { error: "Invalid fields" }
-  }
-
-  const { email, password } = validatedFields.data
-
-  try {
-    const user = await prisma.user.findUnique({ where: { email } })
-
-    if (!user || !user.password) {
-      return { error: "Invalid email or password" }
-    }
-
-    const isPasswordValid = await bcrypt.compare(password, user.password)
-
-    if (!isPasswordValid) {
-      return { error: "Invalid email or password" }
-    }
-
-    return { success: "Login successful" }
-  } catch (error) {
-    if (error instanceof AuthError) {
-      throw error
-    }
-    if (error instanceof Error) {
-      console.error('Login error:', error)
-    }
-    return { error: "An unexpected error occurred" }
-  }
-}
