@@ -22,3 +22,7 @@ build/
 pnpm-lock.yaml
 package-lock.json
 tsconfig.tsbuildinfo
+# clerk configuration (can include secrets)
+/.clerk/
+.vercel
+.env*.local

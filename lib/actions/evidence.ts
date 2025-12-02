@@ -90,3 +90,18 @@ export async function timestampOnHedera(evidenceId: string) {
 
   revalidatePath(`/dashboard/cases/${evidence.caseId}`);
 }
+
+export async function getEvidenceById(evidenceId: string) {
+    const { userId } = auth();
+  
+    if (!userId) {
+      throw new Error('You must be logged in to view evidence.');
+    }
+  
+    const evidence = await prisma.evidence.findUnique({
+      where: { id: evidenceId, userId },
+    });
+  
+    return evidence;
+  }
+  

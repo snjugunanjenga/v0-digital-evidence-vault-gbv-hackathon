@@ -135,7 +135,7 @@ export default function CaseDetailPageClient({ caseItem }: { caseItem: CaseWithE
                   </TableCell>
                 </TableRow>
               )}
-            </Body>
+            </TableBody>
           </Table>
         </CardContent>
       </Card>
