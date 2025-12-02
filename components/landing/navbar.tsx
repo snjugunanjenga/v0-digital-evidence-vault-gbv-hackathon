@@ -5,6 +5,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { Menu, Shield } from "lucide-react"
+import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs"
 
 const navLinks = [
   { href: "#features", label: "Features" },
@@ -44,12 +45,17 @@ export function Navbar() {
 
         {/* Desktop Auth Buttons */}
         <div className="hidden md:flex items-center gap-3">
-          <Button variant="ghost" asChild>
-            <Link href="/login">Log In</Link>
-          </Button>
-          <Button asChild className="neon-border bg-primary/10 hover:bg-primary/20 text-primary">
-            <Link href="/signup">Get Started</Link>
-          </Button>
+          <SignedOut>
+            <Button variant="ghost" asChild>
+              <Link href="/login">Log In</Link>
+            </Button>
+            <Button asChild className="neon-border bg-primary/10 hover:bg-primary/20 text-primary">
+              <Link href="/signup">Get Started</Link>
+            </Button>
+          </SignedOut>
+          <SignedIn>
+            <UserButton />
+          </SignedIn>
         </div>
 
         {/* Mobile Menu */}
@@ -72,12 +78,17 @@ export function Navbar() {
                 </Link>
               ))}
               <hr className="border-border" />
-              <Button variant="ghost" asChild className="justify-start">
-                <Link href="/login">Log In</Link>
-              </Button>
-              <Button asChild className="neon-border bg-primary/10 hover:bg-primary/20 text-primary">
-                <Link href="/signup">Get Started</Link>
-              </Button>
+              <SignedOut>
+                <Button variant="ghost" asChild className="justify-start">
+                  <Link href="/login">Log In</Link>
+                </Button>
+                <Button asChild className="neon-border bg-primary/10 hover:bg-primary/20 text-primary">
+                  <Link href="/signup">Get Started</Link>
+                </Button>
+              </SignedOut>
+              <SignedIn>
+                <UserButton />
+              </SignedIn>
             </div>
           </SheetContent>
         </Sheet>

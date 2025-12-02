@@ -1,293 +1,126 @@
-# Digital Evidence Vault: AI-Assisted Implementation Guide
+# Digital Evidence Vault: Hackathon Build Plan
 
-This document provides a step-by-step guide for an AI coding agent to build the Digital Evidence Vault application. Follow each step sequentially.
+This document outlines the critical path to building the Digital Evidence Vault. Each phase contains a series of high-leverage prompts designed for a senior developer or an advanced AI agent to execute swiftly and effectively.
 
----
-
-## Phase 1: Project Setup & Database Configuration
-
-**Objective:** Initialize the Next.js project, set up Prisma ORM, and configure a serverless Postgres database with Neon.
-
-- [x] **Task 1.1: Initialize Next.js Project**
-    - **Action:** Create a new Next.js 16+ project with the App Router.
-    - **Command:** `npx create-next-app@latest digital-evidence-vault --typescript --tailwind --eslint`
-    - **Verification:** The project directory `digital-evidence-vault` is created and `npm run dev` starts the server successfully.
-
-- [x] **Task 1.2: Install Prisma & Dependencies**
-    - **Action:** Add Prisma ORM, the Prisma client, and the Neon serverless database adapter.
-    - **Command:** `npm install prisma @prisma/client @prisma/adapter-neon`
-    - **Command:** `npm install -D @types/node`
-    - **Verification:** The dependencies are added to `package.json`.
-
-- [x] **Task 1.3: Initialize Prisma**
-    - **Action:** Set up the initial Prisma configuration.
-    - **Command:** `npx prisma init`
-    - **Verification:** A `prisma` directory with a `schema.prisma` file and a `.env` file are created.
-
-- [x] **Task 1.4: Configure Database Connection**
-    - **Action:** Update the `.env` file with the Neon database connection string.
-    - **File to Edit:** `.env`
-    - **Content:**
-      ```
-      DATABASE_URL="prisma://aws-us-east-2.neon.tech/digital-evidence-vault?pg-bouncer=true&sslmode=require&connection_limit=1&adapter=neon"
-      ```
-    - **Note:** The developer will need to replace the placeholder with their actual Neon connection string.
-
-- [x] **Task 1.5: Define Database Schema**
-    - **Action:** Define the data models for `User`, `Case`, and `Evidence` in the Prisma schema.
-    - **File to Edit:** `prisma/schema.prisma`
-    - **Content:**
-      ```prisma
-      generator client {
-        provider = "prisma-client-js"
-      }
-
-      datasource db {
-        provider = "postgresql"
-        url      = env("DATABASE_URL")
-      }
-
-      model User {
-        id        String     @id @default(cuid())
-        email     String     @unique
-        password  String
-        createdAt DateTime   @default(now())
-        updatedAt DateTime   @updatedAt
-        cases     Case[]
-      }
-
-      model Case {
-        id          String    @id @default(cuid())
-        title       String
-        description String?
-        createdAt   DateTime  @default(now())
-        updatedAt   DateTime  @updatedAt
-        userId      String
-        user        User      @relation(fields: [userId], references: [id])
-        evidence    Evidence[]
-      }
-
-      model Evidence {
-        id          String    @id @default(cuid())
-        fileName    String
-        fileType    String
-        fileHash    String    @unique
-        uploadDate  DateTime  @default(now())
-        caseId      String
-        case        Case      @relation(fields: [caseId], references: [id])
-      }
-      ```
-
-- [x] **Task 1.6: Push Schema to Database**
-    - **Action:** Apply the schema changes to the Neon database.
-    - **Command:** `npx prisma db push`
-    - **Verification:**
-        - The command completes successfully.
-        - Run `npx prisma studio` to open the database browser and verify that the `User`, `Case`, and `Evidence` tables are created.
+**Core Architecture:** Next.js 16 (App Router), Clerk (Authentication), Prisma 7 (ORM), Server Actions (Mutations), Shadcn/UI (Component Library).
 
 ---
 
-## Phase 2: Authentication & User Management
+## Phase 1: Authentication & UI Shell (Completed)
 
-**Objective:** Implement user authentication using NextAuth.js.
+**Objective:** Establish a secure foundation with modern authentication and a basic application layout.
 
-- [x] **Task 2.1: Install NextAuth.js**
-    - **Action:** Add the NextAuth.js library.
-    - **Command:** `npm install next-auth`
-    - **Verification:** The dependency is added to `package.json`.
+- [x] **Task 1.1: Migrate from NextAuth to Clerk**
+    - **Status:** Done.
+    - **Details:** Replaced `next-auth` with `@clerk/nextjs`, configured `middleware.ts` (now `proxy.ts`) to protect `/dashboard`, and wrapped the root layout in `<ClerkProvider>`.
 
-- [x] **Task 2.2: Create NextAuth.js API Route**
-    - **Action:** Create the dynamic API route for NextAuth.js to handle authentication requests.
-    - **File to Create:** `app/api/auth/[...nextauth]/route.ts`
-    - **Content:**
-      ```typescript
-      import NextAuth from "next-auth";
-      import CredentialsProvider from "next-auth/providers/credentials";
-      import { PrismaClient } from "@prisma/client";
-      import bcrypt from "bcrypt";
-
-      const prisma = new PrismaClient();
-
-      export const authOptions = {
-        providers: [
-          CredentialsProvider({
-            name: "Credentials",
-            credentials: {
-              email: { label: "Email", type: "text" },
-              password: { label: "Password", type: "password" }
-            },
-            async authorize(credentials) {
-              if (!credentials?.email || !credentials.password) {
-                return null;
-              }
-
-              const user = await prisma.user.findUnique({
-                where: { email: credentials.email }
-              });
-
-              if (user && await bcrypt.compare(credentials.password, user.password)) {
-                return { id: user.id, email: user.email };
-              } else {
-                return null;
-              }
-            }
-          })
-        ],
-        session: {
-          strategy: "jwt",
-        },
-        pages: {
-          signIn: '/login',
-        },
-      };
-
-      const handler = NextAuth(authOptions);
-      export { handler as GET, handler as POST };
-      ```
-    - **Note:** `bcrypt` will be installed in the next step.
-
-- [x] **Task 2.3: Install bcrypt**
-    - **Action:** Add `bcrypt` for password hashing.
-    - **Command:** `npm install bcrypt && npm install -D @types/bcrypt`
-    - **Verification:** The dependencies are added to `package.json`.
-
-- [x] **Task 2.4: Create Authentication UI**
-    - **Action:** Create the login and signup pages.
-    - **File to Create:** `app/login/page.tsx`
-    - **Content:** (A basic login form using Tailwind CSS and React state)
-    - **File to Create:** `app/signup/page.tsx`
-    - **Content:** (A basic signup form that sends data to a signup API route)
-
-- [x] **Task 2.5: Create Signup API Route**
-    - **Action:** Create an API route to handle user registration.
-    - **File to Create:** `app/api/signup/route.ts`
-    - **Content:**
-      ```typescript
-      import { PrismaClient } from "@prisma/client";
-      import bcrypt from "bcrypt";
-      import { NextResponse } from "next/server";
-
-      const prisma = new PrismaClient();
-
-      export async function POST(req: Request) {
-        const { email, password } = await req.json();
-        const hashedPassword = await bcrypt.hash(password, 10);
-        try {
-          const user = await prisma.user.create({
-            data: { email, password: hashedPassword },
-          });
-          return NextResponse.json({ user });
-        } catch (error) {
-          return NextResponse.json({ error: "User already exists" }, { status: 400 });
-        }
-      }
-      ```
-    - **Verification:**
-        - Navigate to `/signup`, create a user.
-        - Use Prisma Studio to verify the user is in the database.
-        - Navigate to `/login`, log in as the new user.
+- [x] **Task 1.2: Decouple User Model from Local DB**
+    - **Status:** Done.
+    - **Details:** Removed the `User` model from `schema.prisma`. The `Case` and `Evidence` models now use a `userId: String` to store the Clerk User ID.
 
 ---
 
-## Phase 3: Core Logic - Evidence Upload & Hashing
+## Phase 2: Core Dashboard & Case Management
 
-**Objective:** Implement the core functionality for uploading evidence files and generating a cryptographic hash.
+**Objective:** Build the authenticated user's main workspace for creating and viewing evidence cases.
 
-- [x] **Task 3.1: Create File Upload Component**
-    - **Action:** Build a React component for file selection and upload.
-    - **File to Create:** `components/evidence-upload-form.tsx`
-    - **Libraries:** Use `react-dropzone` for a better UX.
-    - **Command:** `npm install react-dropzone`
-    - **Content:** (A form with a dropzone, file metadata inputs, and a submit button)
+- **Task 2.1: Implement Navigation and User State**
+    - **Action:** Modify the primary navbar component (`components/landing/navbar.tsx`) to be dynamic.
+    - **Acceptance Criteria:**
+        - Unauthenticated users see "Login" and "Sign Up" buttons.
+        - Authenticated users see a `<UserButton />` component from Clerk for profile management and logout.
+        - Use Clerk's `<SignedIn>`, `<SignedOut>`, and `<UserButton>` components to manage UI state declaratively.
 
-- [x] **Task 3.2: Implement Client-Side Hashing**
-    - **Action:** Use the Web Crypto API to generate a SHA-256 hash of the selected file in the browser.
-    - **File to Edit:** `components/evidence-upload-form.tsx`
-    - **Logic:**
-      ```typescript
-      const handleFileChange = async (acceptedFiles) => {
-        const file = acceptedFiles[0];
-        const buffer = await file.arrayBuffer();
-        const hashBuffer = await crypto.subtle.digest('SHA-256', buffer);
-        const hashArray = Array.from(new Uint8Array(hashBuffer));
-        const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-        // Set the hash in the component's state
-      };
-      ```
-    - **Verification:**
-        - Select a file in the upload form.
-        - The SHA-256 hash is generated and displayed in the console or on the page.
+- **Task 2.2: Create the Main Dashboard Page**
+    - **Action:** Build the primary dashboard UI at `app/dashboard/page.tsx`. This page will display a list of all cases belonging to the currently logged-in user.
+    - **Data Fetching:** Use a Server Component to fetch cases directly.
+        - Import the `prisma` client.
+        - Use Clerk's `auth()` helper to get the `userId`.
+        - Query the `Case` model: `prisma.case.findMany({ where: { userId } })`.
+    - **UI:**
+        - Use a `<Card>` component from Shadcn for each case in the list, displaying the case `title` and `createdAt` date.
+        - Each `Case` card must be a link (`<Link>`) that navigates to `/dashboard/cases/[id]`.
+        - Include a "Create New Case" `<Button>` that navigates to `/dashboard/cases/new`. (The creation page will be built in the next task).
 
----
+- **Task 2.3: Implement Case Creation Logic**
+    - **Action:** Create the "New Case" page and the Server Action to handle form submission.
+    - **File to Create:** `app/dashboard/cases/new/page.tsx`.
+    - **UI:** The page should contain a form with `<Input>` fields for `title` and `<Textarea>` for `description`. Use `zod` and `react-hook-form` for client-side validation.
+    - **Server Action (`actions/case.ts`):**
+        - Create a new file `lib/actions/case.ts`.
+        - Define an async function `createCase(formData: FormData)`.
+        - Annotate it with `'use server'`.
+        - Inside the action:
+            1. Get the `userId` from Clerk's `auth()`. If not found, throw an error.
+            2. Extract `title` and `description` from `formData`. Use Zod for server-side validation.
+            3. Call `prisma.case.create({ data: { userId, title, description } })`.
+            4. Use `revalidatePath('/dashboard')` to refresh the case list.
+            5. Use `redirect('/dashboard')` to navigate the user back to the dashboard after successful creation.
+    - **Integration:** Hook the Server Action up to the form's `action` attribute.
 
-## Phase 4: API & Database Integration
-
-**Objective:** Connect the frontend to the backend to store evidence metadata.
-
-- [x] **Task 4.1: Create Evidence Submission API Route**
-    - **Action:** Create an API route to handle the submission of evidence metadata.
-    - **File to Create:** `app/api/evidence/route.ts`
-    - **Logic:**
-      - The route should be protected and only accessible to authenticated users.
-      - It should accept `fileName`, `fileType`, `fileHash`, and `caseId`.
-      - It should create a new `Evidence` record in the database.
-    - **Verification:**
-        - Send a POST request to `/api/evidence` with valid data and an authentication token.
-        - Verify the new evidence record is created in the database using Prisma Studio.
-
-- [x] **Task 4.2: Connect Frontend to API**
-    - **Action:** Update the evidence upload form to send the file metadata and hash to the API endpoint.
-    - **File to Edit:** `components/evidence-upload-form.tsx`
-    - **Logic:**
-      - On form submission, make a `fetch` POST request to `/api/evidence`.
-      - Handle success and error responses.
-    - **Verification:**
-        - Upload a file using the UI.
-        - The evidence record should appear in the database.
+- **Task 2.4: Build the Case Detail View**
+    - **Action:** Create the dynamic page to display a single case and its associated evidence.
+    - **File to Create:** `app/dashboard/cases/[id]/page.tsx`.
+    - **Data Fetching:** This is a Server Component.
+        - Get the `userId` from `auth()`.
+        - Get the case `id` from the page `params`.
+        - Fetch the case and its related evidence: `prisma.case.findUnique({ where: { id, userId }, include: { evidence: true } })`. Querying by both `id` and `userId` ensures users can only see their own cases.
+    - **UI:**
+        - Display the case `title` and `description`.
+        - List the associated `Evidence` records in a `<Table>` component. The table should show `fileName`, `fileType`, and `uploadDate`.
+        - Include an "Upload New Evidence" `<Button>` on this page.
 
 ---
 
-## Phase 5: UI/UX & Evidence Export
+## Phase 3: Evidence Management & Cryptography
 
-**Objective:** Build the user interface for viewing and managing evidence, and implement the evidence export functionality.
+**Objective:** Implement the core value proposition: secure, client-side hashing and metadata storage for digital evidence.
 
-- [x] **Task 5.1: Create Dashboard Page**
-    - **Action:** Create a dashboard page to display the user's cases and evidence.
-    - **File to Create:** `app/dashboard/page.tsx`
+- **Task 3.1: Create Evidence Upload Page**
+    - **Action:** Build a dedicated page for uploading evidence to a specific case.
+    - **File to Create:** `app/dashboard/evidence/upload/page.tsx` (or use a Dialog/Modal from the case detail page).
     - **Logic:**
-      - Fetch the user's cases and evidence from the database using a server component.
-      - Display the data in a user-friendly format (e.g., a table or cards).
+        - The page should accept a `caseId` via search parameter (e.g., `/upload?caseId=...`).
+        - The UI will be a form containing a file input and a submit button.
 
-- [x] **Task 5.2: Implement Evidence Detail View**
-    - **Action:** Create a dynamic route to show the details of a specific piece of evidence.
-    - **File to Create:** `app/dashboard/evidence/[id]/page.tsx`
+- **Task 3.2: Implement Client-Side Hashing**
+    - **Action:** Before upload, generate a SHA-256 hash of the file *in the browser*. This is critical—the raw file never touches the server.
+    - **File to Edit:** The evidence upload component/page.
     - **Logic:**
-      - Fetch the evidence details by ID.
-      - Display all metadata, including the file hash.
+        1. On file selection, use the Web Crypto API (`crypto.subtle.digest`) to calculate the file's SHA-256 hash.
+        2. Convert the resulting `ArrayBuffer` to a hex string.
+        3. Store the file's `name`, `type`, the calculated `hash`, and the `caseId` in the component's state, ready for submission.
 
-- [x] **Task 5.3: Create Evidence Export Functionality**
-    - **Action:** Add a button to the evidence detail page to export the evidence metadata as a JSON file.
-    - **File to Edit:** `app/dashboard/evidence/[id]/page.tsx`
-    - **Logic:**
-      - On button click, create a JSON object with the evidence data.
-      - Create a Blob from the JSON data.
-      - Create a download link and trigger a download.
-      ```typescript
-      const handleExport = () => {
-        const json = JSON.stringify(evidenceData, null, 2);
-        const blob = new Blob([json], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `evidence-${evidenceData.id}.json`;
-        a.click();
-        URL.revokeObjectURL(url);
-      };
-      ```
-    - **Verification:**
-        - Navigate to an evidence detail page.
-        - Click the "Export" button.
-        - A JSON file with the evidence data should be downloaded.
+- **Task 3.3: Create Evidence Storage Server Action**
+    - **Action:** Write the Server Action to store the evidence metadata. The file itself is NOT transferred.
+    - **File to Create:** `lib/actions/evidence.ts`.
+    - **Server Action `storeEvidence(metadata)`:**
+        - The function will accept an object: `{ caseId: string, fileName: string, fileType: string, fileHash: string }`.
+        - Get the `userId` from `auth()`.
+        - **Critical Security Check:** Before writing to the DB, verify that the `caseId` provided belongs to the `userId`. Query `prisma.case.findUnique({ where: { id: caseId, userId } })`. If it doesn't exist, throw an unauthorized error.
+        - If authorized, call `prisma.evidence.create({ data: { ...metadata, userId } })`.
+        - `revalidatePath('/dashboard/cases/[id]')` for the relevant case ID.
+        - `redirect(...)` back to the case detail page.
 
 ---
-**Note:** All features have been implemented and tests have been undertaken to ensure functionality.
+
+## Phase 4: Final Polish & Export
+
+**Objective:** Add the final user-facing features that complete the core loop and deliver a polished product.
+
+- **Task 4.1: Implement Evidence Export**
+    - **Action:** On the Case Detail page (`/dashboard/cases/[id]`), add an "Export Case" button.
+    - **Logic:** This is a client-side function.
+        - On click, gather all the evidence metadata for the current case (it's already available from the initial server component load).
+        - Format the data as a clean JSON object.
+        - Create a `Blob` of type `application/json`, generate an object URL (`URL.createObjectURL`), and trigger a download for the user.
+
+- **Task 4.2: Implement Hedera Timestamping (Stretch Goal)**
+    - **Action:** Create a server-side mechanism to submit an evidence hash to the Hedera Consensus Service (HCS) to create an immutable, verifiable timestamp.
+    - **Trigger:** This could be a button on the evidence detail page ("Timestamp with Hedera").
+    - **Server Action `timestampOnHedera(evidenceId: string)`:**
+        1. Get `userId`, verify ownership of the evidence.
+        2. Fetch the evidence record to get its `fileHash`.
+        3. Use the Hedera SDK to create a new topic or submit to an existing one. The message will be the `fileHash`.
+        4. Store the resulting Hedera transaction ID and timestamp back on the `Evidence` record in your own database.
+    - **UI:** Display the Hedera transaction ID and timestamp on the evidence detail page.

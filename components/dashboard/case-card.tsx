@@ -11,7 +11,7 @@ export function CaseCard({ caseItem }: CaseCardProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{caseItem.name}</CardTitle>
+        <CardTitle>{caseItem.title}</CardTitle>
         <CardDescription>{caseItem.description}</CardDescription>
       </CardHeader>
       <CardContent>
