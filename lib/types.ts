@@ -15,12 +15,12 @@ export interface SubmissionResult {
 export interface Case {
   id: string
   title: string
-  description: string
+  description: string | null
   category: CaseCategory
   status: CaseStatus
-  createdAt: string
-  updatedAt: string
-  evidenceCount: number
+  createdAt: Date
+  updatedAt: Date
+  _count?: { evidence: number } // Added for getCases result
 }
 
 export interface Evidence {
@@ -30,13 +30,14 @@ export interface Evidence {
   fileType: string
   fileSize: number
   hash: string
-  hederaTransactionId: string
-  timestamp: string
+  hederaTransactionId: string | null
+  timestamp: Date
   sourcePlatform: string
-  dateOfIncident: string
-  description: string
+  dateOfIncident: Date
+  description: string | null
   category: EvidenceCategory
   thumbnailUrl?: string
+  case: Case // This is included from Prisma query
 }
 
 export type CaseCategory =

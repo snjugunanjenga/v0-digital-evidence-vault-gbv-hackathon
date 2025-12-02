@@ -2,15 +2,24 @@
 
 import { z } from 'zod';
 import { auth } from '@clerk/nextjs/server';
-import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
+import { revalidatePath } from 'next/cache';
 import prisma from '@/lib/prisma';
+import { EvidenceCategory } from '@/lib/types';
 
 const EvidenceSchema = z.object({
   caseId: z.string(),
   fileName: z.string(),
   fileType: z.string(),
   fileHash: z.string(),
+  // Add optional fields for `hederaTransactionId`, `timestamp`, `sourcePlatform`, `dateOfIncident`, `description`, `category`
+  hederaTransactionId: z.string().nullable().optional(),
+  timestamp: z.date().optional(),
+  sourcePlatform: z.string().optional(),
+  dateOfIncident: z.date().optional(),
+  description: z.string().nullable().optional(),
+  category: z.nativeEnum(EvidenceCategory).optional(),
+  fileSize: z.number().optional(),
 });
 
 type EvidenceMetadata = z.infer<typeof EvidenceSchema>;
@@ -22,47 +31,101 @@ export async function storeEvidence(metadata: EvidenceMetadata) {
     throw new Error('You must be logged in to store evidence.');
   }
 
-  const validatedMetadata = EvidenceSchema.safeParse(metadata);
+  const validatedData = EvidenceSchema.parse(metadata);
 
-  if (!validatedMetadata.success) {
-    throw new Error('Invalid evidence metadata.');
-  }
-
-  const { caseId, fileName, fileType, fileHash } = validatedMetadata.data;
-
-  // Critical Security Check: Verify case ownership
-  const caseItem = await prisma.case.findUnique({
-    where: { id: caseId, userId },
+  // Critical Security Check: Verify that the case belongs to the user.
+  const caseOwner = await prisma.case.findUnique({
+    where: {
+      id: validatedData.caseId,
+      userId: userId,
+    },
   });
 
-  if (!caseItem) {
+  if (!caseOwner) {
     throw new Error('Unauthorized: You do not have permission to add evidence to this case.');
   }
 
   try {
     await prisma.evidence.create({
       data: {
-        caseId,
-        userId,
-        fileName,
-        fileType,
-        fileHash,
-        uploadDate: new Date(),
+        ...validatedData,
+        userId: userId, // Ensure userId is explicitly set
       },
     });
   } catch (error) {
-    throw new Error('Failed to store evidence metadata.');
+    // Check for unique constraint violation on fileHash
+    if (error instanceof Error && 'code' in error && (error as any).code === 'P2002') {
+       throw new Error('This file has already been uploaded as evidence.');
+    }
+    throw new Error('Failed to store evidence in the database.');
   }
 
-  revalidatePath(`/dashboard/cases/${caseId}`);
-  redirect(`/dashboard/cases/${caseId}`);
+  revalidatePath(`/dashboard/cases/${validatedData.caseId}`);
+  redirect(`/dashboard/cases/${validatedData.caseId}`);
 }
 
-export async function timestampOnHedera(evidenceId: string) {
+interface GetEvidenceFilters {
+  caseId?: string;
+  category?: EvidenceCategory;
+  dateFrom?: Date;
+  dateTo?: Date;
+  searchQuery?: string;
+}
+
+export async function getEvidence(filters: GetEvidenceFilters = {}) {
   const { userId } = auth();
 
   if (!userId) {
-    throw new Error('You must be logged in.');
+    redirect('/signin');
+  }
+
+  const whereClause: any = { userId };
+
+  if (filters.caseId && filters.caseId !== 'all') {
+    whereClause.caseId = filters.caseId;
+  }
+  if (filters.category && filters.category !== 'all') {
+    whereClause.category = filters.category;
+  }
+
+  if (filters.dateFrom || filters.dateTo) {
+    whereClause.dateOfIncident = {};
+    if (filters.dateFrom) {
+      whereClause.dateOfIncident.gte = filters.dateFrom;
+    }
+    if (filters.dateTo) {
+      whereClause.dateOfIncident.lte = filters.dateTo;
+    }
+  }
+
+  if (filters.searchQuery) {
+    const search = filters.searchQuery.toLowerCase();
+    whereClause.OR = [
+      { fileName: { contains: search, mode: 'insensitive' } },
+      { description: { contains: search, mode: 'insensitive' } },
+      { fileHash: { contains: search, mode: 'insensitive' } },
+      { hederaTransactionId: { contains: search, mode: 'insensitive' } },
+    ];
+  }
+
+  try {
+    const evidence = await prisma.evidence.findMany({
+      where: whereClause,
+      orderBy: { uploadDate: 'desc' },
+      include: { case: true },
+    });
+    return evidence;
+  } catch (error) {
+    console.error("Database error fetching evidence:", error);
+    throw new Error('Failed to fetch evidence.');
+  }
+}
+
+export async function exportSingleEvidence(evidenceId: string) {
+  const { userId } = auth();
+
+  if (!userId) {
+    throw new Error('Unauthorized');
   }
 
   const evidence = await prisma.evidence.findUnique({
@@ -70,54 +133,16 @@ export async function timestampOnHedera(evidenceId: string) {
   });
 
   if (!evidence) {
-    throw new Error('Evidence not found or you do not have permission.');
+    throw new Error('Evidence not found or unauthorized.');
   }
 
-  // Placeholder for Hedera SDK interaction
-  // In a real implementation, you would use the Hedera SDK here
-  // to submit the evidence.fileHash to the Hedera Consensus Service.
-  
-  const hederaTransactionId = `placeholder-tx-id-${Date.now()}`;
-  const hederaTimestamp = new Date();
+  // In a real application, this would generate a secure, temporary download URL
+  // for the actual file stored in cloud storage (e.g., S3, Azure Blob, Google Cloud Storage).
+  // For now, we'll return a placeholder URL.
+  const placeholderDownloadUrl = `/api/download-evidence?id=${evidenceId}&token=YOUR_SECURE_TOKEN`;
 
-  await prisma.evidence.update({
-    where: { id: evidenceId },
-    data: {
-      hederaTransactionId,
-      hederaTimestamp,
-    },
-  });
-
-  revalidatePath(`/dashboard/cases/${evidence.caseId}`);
-}
-
-export async function getEvidenceById(evidenceId: string) {
-    const { userId } = auth();
-  
-    if (!userId) {
-      throw new Error('You must be logged in to view evidence.');
-    }
-  
-    const evidence = await prisma.evidence.findUnique({
-      where: { id: evidenceId, userId },
-    });
-  
-    return evidence;
-  }
-  
-export async function exportAllData() {
-  const { userId } = auth();
-
-  if (!userId) {
-    throw new Error('You must be logged in to export your data.');
-  }
-
-  const userCases = await prisma.case.findMany({
-    where: { userId },
-    include: {
-      evidence: true,
-    },
-  });
-
-  return JSON.stringify(userCases, null, 2);
+  return {
+    downloadUrl: placeholderDownloadUrl,
+    shareableLink: `${process.env.NEXT_PUBLIC_APP_URL}/share/evidence/${evidenceId}` // Example shareable link
+  };
 }

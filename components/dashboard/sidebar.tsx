@@ -17,6 +17,7 @@ import {
   X,
   HelpCircle,
 } from "lucide-react"
+import { SignOutButton } from "@clerk/nextjs"
 
 const navItems = [
   { href: "/dashboard", icon: LayoutDashboard, label: "Overview" },
@@ -33,6 +34,14 @@ const bottomNavItems = [
 export function DashboardSidebar() {
   const pathname = usePathname()
   const [isMobileOpen, setIsMobileOpen] = useState(false)
+
+  const resolveIsActive = (href: string) => {
+    if (href === "/dashboard/search") {
+      return pathname === href || pathname.startsWith(href + "/")
+    } else {
+      return pathname === href || (href !== "/dashboard" && pathname.startsWith(href))
+    }
+  }
 
   return (
     <>
@@ -76,7 +85,7 @@ export function DashboardSidebar() {
         {/* Navigation */}
         <nav className="flex-1 p-4 space-y-2">
           {navItems.map((item) => {
-            const isActive = pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(item.href))
+            const isActive = resolveIsActive(item.href)
             return (
               <Link
                 key={item.href}
@@ -110,8 +119,12 @@ export function DashboardSidebar() {
             </Link>
           ))}
           <button className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-destructive hover:bg-destructive/10 transition-all w-full">
-            <LogOut className="w-5 h-5" />
-            Sign Out
+            <SignOutButton>
+              <div className="flex items-center gap-3">
+                <LogOut className="w-5 h-5" />
+                Sign Out
+              </div>
+            </SignOutButton>
           </button>
         </div>
       </aside>

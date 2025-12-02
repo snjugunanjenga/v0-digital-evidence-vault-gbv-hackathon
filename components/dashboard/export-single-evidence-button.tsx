@@ -1,45 +1,68 @@
 "use client";
 
 import { Button } from '@/components/ui/button';
-import { useState } from 'react';
-import { Evidence } from '@prisma/client';
+import { useState, useTransition } from 'react';
+import { toast } from 'sonner';
+import { Download, Share2 } from 'lucide-react';
+import { exportSingleEvidence } from '@/lib/actions/evidence';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
 
 interface ExportSingleEvidenceButtonProps {
-  evidenceData: Evidence;
+  evidenceId: string;
 }
 
-export function ExportSingleEvidenceButton({ evidenceData }: ExportSingleEvidenceButtonProps) {
-  const [isExporting, setIsExporting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+export function ExportSingleEvidenceButton({ evidenceId }: ExportSingleEvidenceButtonProps) {
+  const [isPending, startTransition] = useTransition();
 
   const handleExport = () => {
-    setIsExporting(true);
-    setError(null);
-    try {
-      const json = JSON.stringify(evidenceData, null, 2);
-      const blob = new Blob([json], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `evidence-${evidenceData.id}.json`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    } catch (err) {
-      console.error('Failed to export evidence:', err);
-      setError('Failed to export evidence. Please try again.');
-    } finally {
-      setIsExporting(false);
-    }
+    startTransition(async () => {
+      try {
+        const { downloadUrl } = await exportSingleEvidence(evidenceId);
+        // Trigger file download
+        const a = document.createElement('a');
+        a.href = downloadUrl;
+        a.download = `evidence-${evidenceId}`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        toast.success("Evidence export initiated!");
+      } catch (error: any) {
+        toast.error(error.message || "Failed to export evidence.");
+      }
+    });
+  };
+
+  const handleShare = () => {
+    startTransition(async () => {
+      try {
+        const { shareableLink } = await exportSingleEvidence(evidenceId);
+        await navigator.clipboard.writeText(shareableLink);
+        toast.success("Shareable link copied to clipboard!");
+      } catch (error: any) {
+        toast.error(error.message || "Failed to generate shareable link.");
+      }
+    });
   };
 
   return (
-    <div>
-      <Button onClick={handleExport} disabled={isExporting}>
-        {isExporting ? 'Exporting...' : 'Export Evidence'}
-      </Button>
-      {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
-    </div>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" size="sm" disabled={isPending}>
+          <Share2 className="w-4 h-4 mr-2" />
+          {isPending ? "Processing..." : "Share/Export"}
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="glass-card">
+        <DropdownMenuItem onClick={handleExport} disabled={isPending}>
+          <Download className="w-4 h-4 mr-2" />
+          Export Evidence
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem onClick={handleShare} disabled={isPending}>
+          <Share2 className="w-4 h-4 mr-2" />
+          Copy Shareable Link
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }

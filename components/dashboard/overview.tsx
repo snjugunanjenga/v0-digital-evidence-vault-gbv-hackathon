@@ -7,73 +7,19 @@ import { FolderOpen, FileCheck, Clock, Shield, Plus, ArrowRight } from "lucide-r
 import type { Case, Evidence } from "@/lib/types"
 import type { Session } from "next-auth"
 
-// Mock data
-const mockStats = {
-  totalCases: 3,
-  totalEvidence: 12,
-  pendingVerification: 2,
-  verifiedEvidence: 10,
-}
-
-const mockRecentCases: Case[] = [
-  {
-    id: "1",
-    title: "Domestic Violence Case",
-    description: "Documenting ongoing abuse incidents",
-    category: "domestic-violence",
-    status: "active",
-    createdAt: "2025-01-15",
-    updatedAt: "2025-01-28",
-    evidenceCount: 5,
-  },
-  {
-    id: "2",
-    title: "Workplace Harassment",
-    description: "Collection of inappropriate messages",
-    category: "harassment",
-    status: "active",
-    createdAt: "2025-01-20",
-    updatedAt: "2025-01-27",
-    evidenceCount: 4,
-  },
-]
-
-const mockRecentEvidence: Evidence[] = [
-  {
-    id: "1",
-    caseId: "1",
-    fileName: "threatening_message.png",
-    fileType: "image/png",
-    fileSize: 245000,
-    hash: "a1b2c3d4e5f6...",
-    hederaTransactionId: "0.0.123456@1706439000",
-    timestamp: "2025-01-28T10:30:00Z",
-    sourcePlatform: "WhatsApp",
-    dateOfIncident: "2025-01-27",
-    description: "Threatening message received",
-    category: "messages",
-  },
-  {
-    id: "2",
-    caseId: "1",
-    fileName: "bruise_photo.jpg",
-    fileType: "image/jpeg",
-    fileSize: 1200000,
-    hash: "f6e5d4c3b2a1...",
-    hederaTransactionId: "0.0.123457@1706439100",
-    timestamp: "2025-01-28T11:00:00Z",
-    sourcePlatform: "Camera",
-    dateOfIncident: "2025-01-28",
-    description: "Documentation of injury",
-    category: "photos",
-  },
-]
-
 interface DashboardOverviewProps {
   session: Session | null
+  stats: {
+    totalCases: number
+    totalEvidence: number
+    pendingVerification: number
+    verifiedEvidence: number
+  }
+  recentCases: Case[]
+  recentEvidence: Evidence[]
 }
 
-export function DashboardOverview({ session }: DashboardOverviewProps) {
+export function DashboardOverview({ session, stats, recentCases, recentEvidence }: DashboardOverviewProps) {
   const userName = session?.user?.name?.split(" ")[0] || "there"
   return (
     <div className="space-y-8">
@@ -100,7 +46,7 @@ export function DashboardOverview({ session }: DashboardOverviewProps) {
                 <FolderOpen className="w-6 h-6 text-primary" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-foreground">{mockStats.totalCases}</p>
+                <p className="text-2xl font-bold text-foreground">{stats.totalCases}</p>
                 <p className="text-sm text-muted-foreground">Active Cases</p>
               </div>
             </div>
@@ -114,7 +60,7 @@ export function DashboardOverview({ session }: DashboardOverviewProps) {
                 <FileCheck className="w-6 h-6 text-secondary" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-foreground">{mockStats.totalEvidence}</p>
+                <p className="text-2xl font-bold text-foreground">{stats.totalEvidence}</p>
                 <p className="text-sm text-muted-foreground">Evidence Items</p>
               </div>
             </div>
@@ -128,7 +74,7 @@ export function DashboardOverview({ session }: DashboardOverviewProps) {
                 <Shield className="w-6 h-6 text-accent" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-foreground">{mockStats.verifiedEvidence}</p>
+                <p className="text-2xl font-bold text-foreground">{stats.verifiedEvidence}</p>
                 <p className="text-sm text-muted-foreground">Verified on Hedera</p>
               </div>
             </div>
@@ -142,7 +88,7 @@ export function DashboardOverview({ session }: DashboardOverviewProps) {
                 <Clock className="w-6 h-6 text-chart-4" />
               </div>
               <div>
-                <p className="text-2xl font-bold text-foreground">{mockStats.pendingVerification}</p>
+                <p className="text-2xl font-bold text-foreground">{stats.pendingVerification}</p>
                 <p className="text-sm text-muted-foreground">Pending</p>
               </div>
             </div>
@@ -163,7 +109,7 @@ export function DashboardOverview({ session }: DashboardOverviewProps) {
             </Button>
           </CardHeader>
           <CardContent className="space-y-4">
-            {mockRecentCases.map((caseItem) => (
+            {recentCases.map((caseItem) => (
               <Link
                 key={caseItem.id}
                 href={`/dashboard/cases/${caseItem.id}`}
@@ -174,13 +120,14 @@ export function DashboardOverview({ session }: DashboardOverviewProps) {
                     <h3 className="font-medium text-foreground">{caseItem.title}</h3>
                     <p className="text-sm text-muted-foreground mt-1">{caseItem.description}</p>
                   </div>
-                  <span className="text-xs px-2 py-1 rounded-full bg-primary/10 text-primary">
+                  {/* evidenceCount is not directly on caseItem from Prisma, will need to fetch if desired */}
+                  {/* <span className="text-xs px-2 py-1 rounded-full bg-primary/10 text-primary">
                     {caseItem.evidenceCount} items
-                  </span>
+                  </span> */}
                 </div>
               </Link>
             ))}
-            {mockRecentCases.length === 0 && (
+            {recentCases.length === 0 && (
               <p className="text-center text-muted-foreground py-8">No cases yet. Create your first case to start.</p>
             )}
           </CardContent>
@@ -197,18 +144,24 @@ export function DashboardOverview({ session }: DashboardOverviewProps) {
             </Button>
           </CardHeader>
           <CardContent className="space-y-4">
-            {mockRecentEvidence.map((evidence) => (
+            {recentEvidence.map((evidence) => (
               <div key={evidence.id} className="p-4 rounded-lg bg-muted/30">
                 <div className="flex items-start justify-between">
                   <div>
                     <h3 className="font-medium text-foreground">{evidence.fileName}</h3>
                     <p className="text-sm text-muted-foreground mt-1">{evidence.description}</p>
-                    <p className="text-xs text-primary mt-2 font-mono">{evidence.hederaTransactionId}</p>
+                    {evidence.hederaTransactionId && (
+                      <p className="text-xs text-primary mt-2 font-mono">{evidence.hederaTransactionId}</p>
+                    )}
                   </div>
+                  {/* Assuming all recent evidence is verified for now, or add a field to Evidence model */}
                   <span className="text-xs px-2 py-1 rounded-full bg-green-500/10 text-green-500">Verified</span>
                 </div>
               </div>
             ))}
+            {recentEvidence.length === 0 && (
+              <p className="text-center text-muted-foreground py-8">No recent evidence. Upload some to see it here.</p>
+            )}
           </CardContent>
         </Card>
       </div>

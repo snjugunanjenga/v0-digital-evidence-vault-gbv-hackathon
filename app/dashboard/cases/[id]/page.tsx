@@ -1,137 +1,120 @@
-'use client';
-
-import { useEffect, useState, useTransition } from 'react';
-import { useUser } from '@clerk/nextjs';
-import Link from 'next/link';
-import { useParams } from 'next/navigation';
-import { Button } from '@/components/ui/button';
+import { auth } from '@clerk/nextjs/server';
+import prisma from '@/lib/prisma';
+import { notFound } from 'next/navigation';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { PlusCircle, Download, Clock } from 'lucide-react';
-import type { Case, Evidence } from '@prisma/client';
-import { timestampOnHedera } from '@/lib/actions/evidence';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+import { ExportCaseButton } from '@/components/dashboard/export-case-button';
+import { timestampOnHedera } from '@/lib/actions/hedera';
+import { Check, Loader2 } from 'lucide-react';
+import { formatDate } from '@/lib/utils'; // Assuming you have a utility function for formatting dates
 
-interface CaseWithEvidence extends Case {
-  evidence: Evidence[];
-}
-
-function ExportButton({ caseItem }: { caseItem: CaseWithEvidence }) {
-  const handleExport = () => {
-    const dataToExport = {
-      caseTitle: caseItem.title,
-      caseDescription: caseItem.description,
-      createdAt: caseItem.createdAt,
-      evidence: caseItem.evidence.map(e => ({
-        fileName: e.fileName,
-        fileType: e.fileType,
-        fileHash: e.fileHash,
-        uploadDate: e.uploadDate,
-        hederaTransactionId: e.hederaTransactionId,
-        hederaTimestamp: e.hederaTimestamp,
-      })),
-    };
-
-    const jsonString = JSON.stringify(dataToExport, null, 2);
-    const blob = new Blob([jsonString], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `case-${caseItem.id}-export.json`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+interface CaseDetailPageProps {
+  params: {
+    id: string;
   };
-
-  return (
-    <Button onClick={handleExport} variant="outline">
-      <Download className="mr-2 h-4 w-4" />
-      Export Case
-    </Button>
-  );
 }
 
-function TimestampButton({ evidenceId }: { evidenceId: string }) {
-    const [isPending, startTransition] = useTransition();
+export default async function CaseDetailPage({ params }: CaseDetailPageProps) {
+  const { userId } = auth();
 
-    const handleTimestamp = () => {
-        startTransition(async () => {
-            await timestampOnHedera(evidenceId);
-        });
-    };
+  if (!userId) {
+    return notFound();
+  }
 
-    return (
-        <Button onClick={handleTimestamp} disabled={isPending} size="sm">
-            <Clock className="mr-2 h-4 w-4" />
-            {isPending ? 'Timestamping...' : 'Timestamp with Hedera'}
-        </Button>
-    );
-}
+  const caseData = await prisma.case.findUnique({
+    where: {
+      id: params.id,
+      userId: userId, // Security: Ensure the user owns this case
+    },
+    include: {
+      evidence: true, // Include all related evidence
+    },
+  });
 
-// We will assume the data is fetched and passed to this client component
-export default function CaseDetailPageClient({ caseItem }: { caseItem: CaseWithEvidence | null }) {
-  if (!caseItem) {
-    return (
-        <div className="container mx-auto py-8">
-            <p>Case not found or you do not have permission to view it.</p>
-        </div>
-    );
+  if (!caseData) {
+    return notFound();
   }
 
   return (
-    <div className="container mx-auto py-8">
+    <div className="space-y-6">
       <Card>
-        <CardHeader className="flex flex-row items-start justify-between">
-          <div>
-            <CardTitle className="text-3xl">{caseItem.title}</CardTitle>
-            <CardDescription>{caseItem.description}</CardDescription>
-          </div>
-          <ExportButton caseItem={caseItem} />
+        <CardHeader>
+          <CardTitle>{caseData.title}</CardTitle>
+          <CardDescription>
+            Created on {new Date(caseData.createdAt).toLocaleDateString()}
+          </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-2xl font-bold">Evidence</h2>
+          <p className="text-sm text-muted-foreground">{caseData.description}</p>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader className="flex flex-row justify-between items-center">
+          <div>
+            <CardTitle>Evidence</CardTitle>
+            <CardDescription>
+              All evidence associated with this case.
+            </CardDescription>
+          </div>
+          <div className="flex items-center gap-2">
+            <ExportCaseButton caseData={caseData} />
             <Button asChild>
-              <Link href={`/dashboard/evidence/upload?caseId=${caseItem.id}`}>
-                <PlusCircle className="mr-2 h-4 w-4" />
+              <Link href={`/dashboard/evidence/upload?caseId=${caseData.id}`}>
                 Upload New Evidence
               </Link>
             </Button>
           </div>
+        </CardHeader>
+        <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
                 <TableHead>File Name</TableHead>
-                <TableHead>File Hash</TableHead>
-                <TableHead>Hedera Timestamp</TableHead>
-                <TableHead>Actions</TableHead>
+                <TableHead>File Type</TableHead>
+                <TableHead>Upload Date</TableHead>
+                <TableHead className="text-center">Hedera Timestamp</TableHead>
+                <TableHead className="text-center">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {caseItem.evidence.length > 0 ? (
-                caseItem.evidence.map((evidenceItem) => (
-                  <TableRow key={evidenceItem.id}>
-                    <TableCell>{evidenceItem.fileName}</TableCell>
-                    <TableCell className="font-mono text-xs">{evidenceItem.fileHash}</TableCell>
+              {caseData.evidence.length > 0 ? (
+                caseData.evidence.map((evidence) => (
+                  <TableRow key={evidence.id}>
+                    <TableCell>{evidence.fileName}</TableCell>
+                    <TableCell>{evidence.fileType}</TableCell>
                     <TableCell>
-                      {evidenceItem.hederaTimestamp ? (
-                        <div className="text-xs">
-                          <p>{new Date(evidenceItem.hederaTimestamp).toLocaleString()}</p>
-                          <p className="font-mono text-muted-foreground">{evidenceItem.hederaTransactionId}</p>
-                        </div>
+                      {new Date(evidence.uploadDate).toLocaleDateString()}
+                    </TableCell>
+                    <TableCell className="text-center text-xs">
+                      {evidence.hederaTransactionId ? (
+                        <span className="flex items-center justify-center gap-1">
+                          <Check className="h-4 w-4 text-green-500" />
+                          <span>{formatDate(evidence.hederaTimestamp)}</span>
+                          <br/>
+                          <span className="text-muted-foreground">Tx: {evidence.hederaTransactionId.substring(0, 10)}...</span>
+                        </span>
                       ) : (
-                        <span className="text-xs text-muted-foreground">Not timestamped</span>
+                        <span className="text-muted-foreground">Not timestamped</span>
                       )}
                     </TableCell>
-                    <TableCell>
-                      {!evidenceItem.hederaTimestamp && <TimestampButton evidenceId={evidenceItem.id} />}
+                    <TableCell className="text-center">
+                      {!evidence.hederaTransactionId && (
+                        <form action={timestampOnHedera.bind(null, evidence.id)}>
+                          <Button variant="outline" size="sm" type="submit">
+                            Timestamp with Hedera
+                          </Button>
+                        </form>
+                      )}
                     </TableCell>
                   </TableRow>
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={4} className="text-center">
-                    No evidence uploaded for this case yet.
+                  <TableCell colSpan={5} className="text-center">
+                    No evidence has been uploaded for this case yet.
                   </TableCell>
                 </TableRow>
               )}

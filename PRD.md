@@ -9,18 +9,26 @@
 The **Digital Evidence Vault** is a Progressive Web App (PWA) designed to help survivors of Technology-Facilitated GBV (TFGBV) collect and preserve digital evidence (screenshots, videos, documents). It solves the "Chain of Custody" problem by calculating a cryptographic hash ($SHA-256$) of the file on the client side and securing it with a third-party verifiable timestamp, ensuring the evidence is admissible in Kenyan courts.
 
 ## 2. Technical Stack
-* **Framework:** Next.js 16 (App Router)
-* **Database:** Neon (Serverless Postgres)
-* **ORM:** Prisma (with `@prisma/adapter-neon`)
-* **Auth:** Auth.js (v5) - *Simple User Session/OAuth*
-* **Security:** Web Cryptography API (Client-side Hashing)
-* **Timestamping:** RFC 3161 Compliant TSA (e.g., FreeTSA) or Mock for MVP.
-* **Styling:** Tailwind CSS
+*   **Framework:** Next.js 16 (App Router)
+*   **Database:** Neon (Serverless Postgres)
+*   **ORM:** Prisma (with `@prisma/adapter-neon`)
+*   **Auth & Billing:** Clerk (manages user sessions, authentication, and SaaS subscriptions via Stripe).
+*   **Security:** Web Cryptography API (Client-side Hashing)
+*   **Timestamping:** Hedera Consensus Service (HCS) via `@hashgraph/sdk` for creating immutable, verifiable timestamps.
+*   **Styling:** Tailwind CSS
 
-## 3. Core User Flows
+## 3. Monetization (SaaS Model)
+To ensure the long-term sustainability of the platform and cover the operational costs of Hedera transactions, a tiered subscription model is implemented.
+
+*   **Free Tier:** Allows a limited number of Hedera timestamps per month (e.g., 5), suitable for individual users with minimal needs.
+*   **Pro Tier:** Offers a significantly higher number of timestamps per month (e.g., 50) for professionals and small organizations.
+*   **Enterprise Tier:** Provides unlimited timestamps, dedicated support, and potential for custom integrations, targeting large organizations and legal firms.
+
+## 4. Core User Flows
 1.  **Secure Upload:** User uploads a file. The app **never** sends the file to the server. It calculates the hash locally.
-2.  **Integrity Proof:** The app sends *only* the hash to the server. The server timestamps this hash via an external TSA and logs the result.
-3.  **Evidence Report:** User downloads a PDF/JSON report containing the Metadata, Hash, and Timestamp Token, serving as a valid Certificate of Authenticity.
+2.  **Integrity Proof:** The app sends *only* the hash to the server. The server submits this hash to the Hedera Consensus Service (HCS) to generate a verifiable, decentralized timestamp.
+3.  **Evidence Report:** User downloads a PDF/JSON report containing the Metadata, Hash, and Hedera Transaction ID/Timestamp, serving as a valid Certificate of Authenticity.
+
 
 ## 4. Database Schema (Conceptual)
 * **User:** `id`, `email`, `name`

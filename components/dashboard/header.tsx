@@ -1,7 +1,7 @@
 "use client"
 
 import { Bell, User } from "lucide-react"
-import { useUser } from "@clerk/nextjs"
+import { useUser, SignOutButton } from "@clerk/nextjs"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -20,10 +20,20 @@ export function DashboardHeader() {
       <div className="flex-1" />
       <div className="flex items-center gap-4">
         {/* Notifications */}
-        <Button variant="ghost" size="icon" className="relative">
-          <Bell className="w-5 h-5" />
-          <span className="absolute top-1 right-1 w-2 h-2 bg-primary rounded-full" />
-        </Button>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon" className="relative">
+              <Bell className="w-5 h-5" />
+              <span className="absolute top-1 right-1 w-2 h-2 bg-primary rounded-full" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-64 glass-card">
+            <DropdownMenuItem>New evidence uploaded</DropdownMenuItem>
+            <DropdownMenuItem>Case #123 updated</DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>View all notifications</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
 
         {/* User Menu */}
         <DropdownMenu>
@@ -43,7 +53,9 @@ export function DashboardHeader() {
             <DropdownMenuItem>Profile</DropdownMenuItem>
             <DropdownMenuItem>Settings</DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="text-destructive">Sign Out</DropdownMenuItem>
+            <DropdownMenuItem className="text-destructive">
+              <SignOutButton>Sign Out</SignOutButton>
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

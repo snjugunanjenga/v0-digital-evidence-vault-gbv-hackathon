@@ -181,11 +181,13 @@ This document provides a summary of the project, including its directory structu
 
 ## Dependencies and Purposes
 
-*   **@clerk/nextjs**: User authentication and management.
+*   **@clerk/nextjs**: User authentication, management, and subscription billing.
+*   **@hashgraph/sdk**: The official SDK for interacting with the Hedera network, used for submitting evidence hashes to the Hedera Consensus Service (HCS).
 *   **@prisma/client**: Prisma client for database access.
 *   **@radix-ui/react-***: UI components for building accessible and customizable UIs.
 *   **next**: The React framework for building server-side rendered and static websites.
 *   **react**: A JavaScript library for building user interfaces.
+*   **stripe**: (Implicitly via Clerk Billing) For processing subscription payments.
 *   **tailwindcss**: A utility-first CSS framework for rapid UI development.
 *   **zod**: A TypeScript-first schema declaration and validation library.
 
@@ -196,5 +198,7 @@ This project follows a modern web application architecture based on the **Next.j
 *   **Frontend**: The frontend is built with **React** and **TypeScript**, using components from **Shadcn/UI** and styled with **Tailwind CSS**. The application is structured using the Next.js App Router, which allows for a file-based routing system and server-side rendering by default.
 *   **Backend**: The backend is built with **Next.js API Routes** and **Server Actions**. **Clerk** is used for user authentication.
 *   **Database**: The application uses a **PostgreSQL** database, with **Prisma** as the Object-Relational Mapper (ORM) for database access.
+*   **Blockchain & Timestamping**: **Hedera Consensus Service (HCS)** is integrated via the `@hashgraph/sdk` to provide immutable, verifiable timestamps for evidence hashes. This adds a decentralized layer of trust and legal admissibility.
+*   **Monetization**: The application is structured as a SaaS product with tiered subscription plans. **Clerk Billing** is used to manage these plans and integrate with **Stripe** for secure payment processing. This model supports the ongoing operational costs of the Hedera service.
 *   **Styling**: **Tailwind CSS** is used for styling, with **PostCSS** for processing CSS.
 *   **Tooling**: The project uses **pnpm** as the package manager, **ESLint** for linting, and **TypeScript** for static typing.

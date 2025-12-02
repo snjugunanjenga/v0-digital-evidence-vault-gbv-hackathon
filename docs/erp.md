@@ -34,21 +34,42 @@ This document provides a high-level overview of the Digital Evidence Vault proje
 
 ## Key Dependencies
 
--   `@clerk/nextjs`: Handles user authentication, identity, and session management.
+-   `@clerk/nextjs`: Handles user authentication, identity, session management, and SaaS billing (via Stripe).
+
+-   `@hashgraph/sdk`: The official SDK for interacting with the Hedera network, enabling the submission of evidence hashes to the Hedera Consensus Service (HCS).
+
 -   `@prisma/client`: A type-safe Node.js ORM used to interact with the database.
+
 -   `next`: The core React framework, utilizing the App Router.
+
 -   `react`: The JavaScript library for building user interfaces.
--ag   `shadcn/ui` & `radix-ui`: A collection of accessible and reusable UI components, built on Radix UI primitives.
+
+-   `shadcn/ui` & `radix-ui`: A collection of accessible and reusable UI components, built on Radix UI primitives.
+
 -   `tailwindcss`: A utility-first CSS framework for rapid UI development.
+
 -   `zod`: A TypeScript-first schema declaration and validation library.
+
 -   `lucide-react`: A library of simple and clean SVG icons.
+
+
 
 ## Architecture
 
+
+
 This project is a modern, full-stack web application built with the **Next.js 16 App Router**.
 
+
+
 -   **Frontend:** The UI is constructed with **React** and styled using **Tailwind CSS** with components from **Shadcn/UI**.
+
 -   **Backend:** Backend logic is primarily handled by **React Server Components** and **Server Actions**, which run on the server and can directly access the database.
+
 -   **Database & ORM:** A **PostgreSQL** database is managed through the **Prisma ORM**, which provides type-safe database access.
--   **Authentication:** User identity and access control are managed by **Clerk**.
+
+-   **Authentication & Billing:** User identity, access control, and subscription management are handled by **Clerk**, which integrates with **Stripe** for payment processing.
+
+-   **Blockchain Integration (Timestamping):** The application integrates with the **Hedera Consensus Service (HCS)** to create immutable, verifiable timestamps for evidence hashes. This provides a decentralized layer of trust critical for legal admissibility.
+
 -   **Type-Safety:** The entire codebase is written in **TypeScript**, with data validation enforced by **Zod**.

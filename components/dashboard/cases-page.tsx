@@ -13,42 +13,14 @@ import { Plus, Search, FolderOpen, MoreVertical, Calendar } from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import type { Case, CaseCategory } from "@/lib/types"
 import { CASE_CATEGORIES } from "@/lib/types"
+import { createCase } from "@/lib/actions/case"
+import { useRouter } from 'next/navigation'
 
-// Mock data
-const mockCases: Case[] = [
-  {
-    id: "1",
-    title: "Domestic Violence Case",
-    description: "Documenting ongoing abuse incidents from partner",
-    category: "domestic-violence",
-    status: "active",
-    createdAt: "2025-01-15",
-    updatedAt: "2025-01-28",
-    evidenceCount: 5,
-  },
-  {
-    id: "2",
-    title: "Workplace Harassment",
-    description: "Collection of inappropriate messages from supervisor",
-    category: "harassment",
-    status: "active",
-    createdAt: "2025-01-20",
-    updatedAt: "2025-01-27",
-    evidenceCount: 4,
-  },
-  {
-    id: "3",
-    title: "Online Stalking Case",
-    description: "Evidence of repeated unwanted contact online",
-    category: "stalking",
-    status: "active",
-    createdAt: "2025-01-10",
-    updatedAt: "2025-01-25",
-    evidenceCount: 8,
-  },
-]
+interface CasesPageProps {
+  cases: Case[]
+}
 
-export function CasesPage() {
+export function CasesPage({ cases: initialCases }: CasesPageProps) {
   const [searchQuery, setSearchQuery] = useState("")
   const [categoryFilter, setCategoryFilter] = useState<string>("all")
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
@@ -57,21 +29,34 @@ export function CasesPage() {
     description: "",
     category: "" as CaseCategory,
   })
+  const [cases, setCases] = useState(initialCases);
+  const router = useRouter();
 
-  const filteredCases = mockCases.filter((caseItem) => {
+  const filteredCases = cases.filter((caseItem) => {
     const matchesSearch =
       caseItem.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      caseItem.description.toLowerCase().includes(searchQuery.toLowerCase())
+      (caseItem.description && caseItem.description.toLowerCase().includes(searchQuery.toLowerCase()))
     const matchesCategory = categoryFilter === "all" || caseItem.category === categoryFilter
     return matchesSearch && matchesCategory
   })
 
-  const handleCreateCase = () => {
-    // Mock create - would integrate with backend
-    console.log("Creating case:", newCase)
-    setIsCreateDialogOpen(false)
-    setNewCase({ title: "", description: "", category: "" as CaseCategory })
-  }
+  const handleCreateCase = async () => {
+    const formData = new FormData();
+    formData.append('title', newCase.title);
+    formData.append('description', newCase.description);
+    formData.append('category', newCase.category);
+
+    try {
+      const createdCase = await createCase(formData);
+      setCases((prev) => [createdCase, ...prev]);
+      setIsCreateDialogOpen(false);
+      setNewCase({ title: "", description: "", category: "" as CaseCategory });
+      router.refresh(); // Refresh current route to re-fetch server components
+    } catch (error) {
+      console.error("Error creating case:", error);
+      // Handle error display to user
+    }
+  };
 
   const getCategoryLabel = (category: CaseCategory) => {
     return CASE_CATEGORIES.find((c) => c.value === category)?.label || category
@@ -209,7 +194,7 @@ export function CasesPage() {
                   {getCategoryLabel(caseItem.category)}
                 </span>
                 <span className="text-xs px-2 py-1 rounded-full bg-primary/10 text-primary">
-                  {caseItem.evidenceCount} items
+                  {caseItem._count?.evidence || 0} items
                 </span>
               </div>
 
