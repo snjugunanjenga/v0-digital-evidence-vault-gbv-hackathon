@@ -1,27 +1,41 @@
 "use client"
 
+import { UserProfile } from "@clerk/nextjs"
+import { Bell, Download, User, Shield, Save } from "lucide-react"
 import { useState } from "react"
-import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { User, Bell, Shield, Download, Trash2, Save } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Trash2 } from "lucide-react"
+import { exportAllData } from "@/lib/actions/evidence"
 
 export function SettingsPage() {
-  const [profile, setProfile] = useState({
-    name: "Sarah Wanjiru",
-    email: "sarah.wanjiru@email.com",
-    phone: "+254 712 345 678",
-  })
-
   const [notifications, setNotifications] = useState({
     emailAlerts: true,
     smsAlerts: false,
     newFeatures: true,
     securityAlerts: true,
   })
+
+  const handleSaveNotifications = () => {
+    // In a real application, you would save these settings to a database.
+    console.log("Saving notification settings:", notifications)
+    // Here you could show a toast notification to confirm saving.
+  }
+
+  const handleExport = async () => {
+    const data = await exportAllData();
+    const blob = new Blob([data], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'evidence-export.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
 
   return (
     <div className="space-y-6">
@@ -34,7 +48,7 @@ export function SettingsPage() {
         <TabsList className="glass-card">
           <TabsTrigger value="profile" className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary">
             <User className="w-4 h-4 mr-2" />
-            Profile
+            Profile & Security
           </TabsTrigger>
           <TabsTrigger
             value="notifications"
@@ -43,58 +57,21 @@ export function SettingsPage() {
             <Bell className="w-4 h-4 mr-2" />
             Notifications
           </TabsTrigger>
-          <TabsTrigger value="security" className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary">
-            <Shield className="w-4 h-4 mr-2" />
-            Security
-          </TabsTrigger>
           <TabsTrigger value="data" className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary">
             <Download className="w-4 h-4 mr-2" />
             Data
           </TabsTrigger>
         </TabsList>
 
-        {/* Profile Tab */}
+        {/* Profile & Security Tab */}
         <TabsContent value="profile">
           <Card className="glass-card">
             <CardHeader>
-              <CardTitle>Profile Information</CardTitle>
-              <CardDescription>Update your personal information.</CardDescription>
+              <CardTitle>Profile & Security</CardTitle>
+              <CardDescription>Update your personal information and manage your security settings.</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <Label htmlFor="name">Full Name</Label>
-                  <Input
-                    id="name"
-                    value={profile.name}
-                    onChange={(e) => setProfile({ ...profile, name: e.target.value })}
-                    className="bg-input border-border"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email Address</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    value={profile.email}
-                    onChange={(e) => setProfile({ ...profile, email: e.target.value })}
-                    className="bg-input border-border"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="phone">Phone Number</Label>
-                  <Input
-                    id="phone"
-                    value={profile.phone}
-                    onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
-                    className="bg-input border-border"
-                  />
-                </div>
-              </div>
-              <Button className="bg-primary hover:bg-primary/90 text-primary-foreground">
-                <Save className="w-4 h-4 mr-2" />
-                Save Changes
-              </Button>
+            <CardContent>
+              <UserProfile routing="path" path="/dashboard/settings" />
             </CardContent>
           </Card>
         </TabsContent>
@@ -149,53 +126,10 @@ export function SettingsPage() {
                   />
                 </div>
               </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        {/* Security Tab */}
-        <TabsContent value="security">
-          <Card className="glass-card">
-            <CardHeader>
-              <CardTitle>Security Settings</CardTitle>
-              <CardDescription>Manage your account security.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="space-y-4">
-                <div className="p-4 rounded-lg bg-muted/30">
-                  <div className="flex items-center justify-between mb-4">
-                    <div>
-                      <p className="font-medium text-foreground">Change Password</p>
-                      <p className="text-sm text-muted-foreground">Update your account password</p>
-                    </div>
-                    <Button variant="outline" className="neon-border bg-transparent">
-                      Update
-                    </Button>
-                  </div>
-                </div>
-                <div className="p-4 rounded-lg bg-muted/30">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="font-medium text-foreground">Two-Factor Authentication</p>
-                      <p className="text-sm text-muted-foreground">Add an extra layer of security</p>
-                    </div>
-                    <Button variant="outline" className="neon-border bg-transparent">
-                      Enable
-                    </Button>
-                  </div>
-                </div>
-                <div className="p-4 rounded-lg bg-muted/30">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="font-medium text-foreground">Active Sessions</p>
-                      <p className="text-sm text-muted-foreground">Manage devices logged into your account</p>
-                    </div>
-                    <Button variant="outline" className="neon-border bg-transparent">
-                      View
-                    </Button>
-                  </div>
-                </div>
-              </div>
+              <Button onClick={handleSaveNotifications} className="mt-6 bg-primary hover:bg-primary/90 text-primary-foreground">
+                <Save className="w-4 h-4 mr-2" />
+                Save Preferences
+              </Button>
             </CardContent>
           </Card>
         </TabsContent>
@@ -209,7 +143,7 @@ export function SettingsPage() {
                 <CardDescription>Download all your evidence records and metadata.</CardDescription>
               </CardHeader>
               <CardContent>
-                <Button variant="outline" className="neon-border bg-transparent">
+                <Button onClick={handleExport} variant="outline" className="neon-border bg-transparent">
                   <Download className="w-4 h-4 mr-2" />
                   Export All Data
                 </Button>

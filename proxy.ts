@@ -5,17 +5,20 @@ const isProtectedRoute = createRouteMatcher([
   '/api/evidence(.*)',
 ]);
 
-export default clerkMiddleware((auth, req) => {
-  if (isProtectedRoute(req)) {
-    auth().protect();
-  }
+export default clerkMiddleware({
+  // Define public routes explicitly.
+  // Clerk automatically protects any routes not listed here.
+  publicRoutes: ['/', '/login(.*)', '/signup(.*)', '/about', '/contact', '/help', '/legal-guide', '/partners', '/privacy', '/security', '/terms'],
+  // Optionally ignore routes from Clerk processing, e.g., for static assets.
+  ignoredRoutes: ['/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv?|docx?|xlsx?|zip|webmanifest)).*)', '/api/webhooks(.*)'],
 });
 
 export const config = {
   matcher: [
-    // Skip Next.js internals and all static files, unless found in search params
+    // Match all routes except static files and _next internals
     '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv?|docx?|xlsx?|zip|webmanifest)).*)',
     // Always run for API routes
     '/(api|trpc)(.*)',
   ],
 };
+

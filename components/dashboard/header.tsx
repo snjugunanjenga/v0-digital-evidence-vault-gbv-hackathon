@@ -1,6 +1,7 @@
 "use client"
 
 import { Bell, User } from "lucide-react"
+import { useUser } from "@clerk/nextjs"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -11,6 +12,8 @@ import {
 } from "@/components/ui/dropdown-menu"
 
 export function DashboardHeader() {
+  const { user, isLoaded } = useUser()
+
   return (
     <header className="h-16 border-b border-border bg-card/50 backdrop-blur-sm flex items-center justify-between px-6 sticky top-0 z-30">
       <div className="lg:hidden w-10" /> {/* Spacer for mobile menu button */}
@@ -29,7 +32,11 @@ export function DashboardHeader() {
               <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
                 <User className="w-4 h-4 text-primary" />
               </div>
-              <span className="hidden sm:inline text-sm">Sarah K.</span>
+              {isLoaded && user ? (
+                <span className="hidden sm:inline text-sm">{user.fullName}</span>
+              ) : (
+                <span className="hidden sm:inline text-sm">...</span>
+              )}
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-48 glass-card">

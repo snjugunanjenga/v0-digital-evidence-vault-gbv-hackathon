@@ -17,7 +17,7 @@ export default function SignUpPage() {
             Even though this file is in `signup/[[...rest]]/page.tsx`,
             we set path to "/signup" to ensure Clerk correctly handles routing.
           */}
-          <SignUp path="/signup" />
+          <SignUp path="/signup" afterSignUpUrl="/dashboard" />
         </CardContent>
       </Card>
     </div>

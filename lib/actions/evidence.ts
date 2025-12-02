@@ -105,3 +105,19 @@ export async function getEvidenceById(evidenceId: string) {
     return evidence;
   }
   
+export async function exportAllData() {
+  const { userId } = auth();
+
+  if (!userId) {
+    throw new Error('You must be logged in to export your data.');
+  }
+
+  const userCases = await prisma.case.findMany({
+    where: { userId },
+    include: {
+      evidence: true,
+    },
+  });
+
+  return JSON.stringify(userCases, null, 2);
+}

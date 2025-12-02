@@ -17,7 +17,7 @@ export default function LoginPage() {
             Even though this file is in `login/[[...rest]]/page.tsx`,
             we set path to "/login" to ensure Clerk correctly handles routing.
           */}
-          <SignIn path="/login" />
+          <SignIn path="/login" afterSignInUrl="/dashboard" />
         </CardContent>
       </Card>
     </div>
