@@ -4,6 +4,19 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String     @id @default(cuid())
+  email     String     @unique
+  // NOTE: Storing passwords in plain text is a significant security risk.
+  // For production environments, it is strongly recommended to hash passwords
+  // using a library like bcrypt before storing them.
+  password  String
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  cases     Case[]     // Defines a one-to-many relationship: A User can have many Cases.
 }
 
 model Case {
@@ -12,7 +25,8 @@ model Case {
   description String?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
-  userId      String
+  userId      String    // Foreign key referencing the User's ID.
+  user        User      @relation(fields: [userId], references: [id]) // Explicit relation to the User model.
   evidence    Evidence[]
 }
 
@@ -24,5 +38,5 @@ model Evidence {
   uploadDate  DateTime  @default(now())
   caseId      String
   case        Case      @relation(fields: [caseId], references: [id])
-  userId      String
+  userId      String    // Retained as per existing schema and potential independent association.
 }

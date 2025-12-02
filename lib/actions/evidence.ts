@@ -1,62 +1,92 @@
-import { prisma } from '@/lib/prisma';
-import { Evidence } from '@prisma/client';
+'use server';
 
-interface EvidenceRecordData {
-  evidenceHash: string;
-  metadata: any;
-  hederaTransactionId: string;
-  consensusTimestamp: Date;
-}
+import { z } from 'zod';
+import { auth } from '@clerk/nextjs/server';
+import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
+import prisma from '@/lib/prisma';
 
-export async function getCasesByUser(userId: string) {
-  const cases = await prisma.case.findMany({
-    where: {
-      userId: userId,
-    },
-  });
-  return cases;
-}
+const EvidenceSchema = z.object({
+  caseId: z.string(),
+  fileName: z.string(),
+  fileType: z.string(),
+  fileHash: z.string(),
+});
 
-export async function getEvidenceByCaseId(caseId: string) {
-  const evidenceRecords = await prisma.evidence.findMany({
-    where: {
-      caseId: caseId,
-    },
-  });
-  return evidenceRecords;
-}
+type EvidenceMetadata = z.infer<typeof EvidenceSchema>;
 
-export async function getEvidenceById(evidenceId: string) {
-  const evidenceRecord = await prisma.evidence.findUnique({
-    where: {
-      id: evidenceId,
-    },
-  });
-  return evidenceRecord;
-}
+export async function storeEvidence(metadata: EvidenceMetadata) {
+  const { userId } = auth();
 
-export async function exportEvidence(caseId: string) {
-  const evidenceRecords = await prisma.evidence.findMany({
-    where: {
-      caseId: caseId,
-    },
-    select: {
-      id: true,
-      fileName: true,
-      fileType: true,
-      fileHash: true,
-      uploadDate: true,
-    },
+  if (!userId) {
+    throw new Error('You must be logged in to store evidence.');
+  }
+
+  const validatedMetadata = EvidenceSchema.safeParse(metadata);
+
+  if (!validatedMetadata.success) {
+    throw new Error('Invalid evidence metadata.');
+  }
+
+  const { caseId, fileName, fileType, fileHash } = validatedMetadata.data;
+
+  // Critical Security Check: Verify case ownership
+  const caseItem = await prisma.case.findUnique({
+    where: { id: caseId, userId },
   });
 
-  // For a real application, you might want to generate a CSV, a zip file with actual evidence files, etc.
-  // For this example, we'll return a JSON string of the evidence metadata.
-  return JSON.stringify(evidenceRecords, null, 2);
+  if (!caseItem) {
+    throw new Error('Unauthorized: You do not have permission to add evidence to this case.');
+  }
+
+  try {
+    await prisma.evidence.create({
+      data: {
+        caseId,
+        userId,
+        fileName,
+        fileType,
+        fileHash,
+        uploadDate: new Date(),
+      },
+    });
+  } catch (error) {
+    throw new Error('Failed to store evidence metadata.');
+  }
+
+  revalidatePath(`/dashboard/cases/${caseId}`);
+  redirect(`/dashboard/cases/${caseId}`);
 }
 
-export async function saveEvidenceRecord(data: EvidenceRecordData) {
-  const evidenceRecord = await prisma.evidenceRecord.create({
-    data,
+export async function timestampOnHedera(evidenceId: string) {
+  const { userId } = auth();
+
+  if (!userId) {
+    throw new Error('You must be logged in.');
+  }
+
+  const evidence = await prisma.evidence.findUnique({
+    where: { id: evidenceId, userId },
   });
-  return evidenceRecord;
+
+  if (!evidence) {
+    throw new Error('Evidence not found or you do not have permission.');
+  }
+
+  // Placeholder for Hedera SDK interaction
+  // In a real implementation, you would use the Hedera SDK here
+  // to submit the evidence.fileHash to the Hedera Consensus Service.
+  
+  const hederaTransactionId = `placeholder-tx-id-${Date.now()}`;
+  const hederaTimestamp = new Date();
+
+  await prisma.evidence.update({
+    where: { id: evidenceId },
+    data: {
+      hederaTransactionId,
+      hederaTimestamp,
+    },
+  });
+
+  revalidatePath(`/dashboard/cases/${evidence.caseId}`);
 }
