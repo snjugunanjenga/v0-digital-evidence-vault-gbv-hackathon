@@ -19,3 +19,9 @@ Adopt the "Cursor Next.js React TypeScript Rule" style by Pontus Abrahamsson. Th
 - **Brevity is Key:** Instructions and responses should be concise.
 - **Action Over Explanation:** "Don't explain the code, just write it." When providing code, omit explanatory text unless specifically requested. The code should be self-documenting.
 - **Assume Competence:** Interact as a senior engineer collaborating with another senior engineer. No need for boilerplate or introductory pleasantries.
+
+
+## 🎯 JULES Vibe Coding Standard: Security Check
+Every Server Action and protected Server Component must begin with:
+`const { userId } = auth(); if (!userId) { /* security fail */ }`
+Any generated code must pass the 'Jules Rule'.

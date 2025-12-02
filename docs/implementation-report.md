@@ -24,4 +24,11 @@ This phase was already complete.
 *   **Task 4.1: Implement Evidence Export**: Completed. The case detail page now includes an "Export Case" button that allows users to download a JSON file containing all their case and evidence metadata.
 *   **Task 4.2: Implement Hedera Timestamping (Stretch Goal)**: Completed (Placeholder). A placeholder implementation for Hedera timestamping has been added. A button on the case detail page triggers a server action that simulates the timestamping process and updates the database with a placeholder transaction ID and timestamp. This can be replaced with a real Hedera SDK implementation in the future.
 
+## Phase 5: User Settings and Data Management
+
+*   **Task 5.1: Implement User Profile and Security Settings**: Completed. The settings page at `/dashboard/settings` now uses Clerk's `<UserProfile />` component to allow users to manage their profile information, change their password, and enable two-factor authentication.
+*   **Task 5.2: Implement Notification Preferences**: Completed. The settings page now includes a "Notifications" tab where users can manage their notification preferences. A "Save" button provides feedback that the settings have been saved.
+*   **Task 5.3: Implement Data Export**: Completed. The settings page now includes a "Data" tab with an "Export All Data" button. This allows users to download a JSON file containing all of their cases and evidence.
+*   **Task 5.4: Update Dashboard Overview**: Completed. The main dashboard page at `/dashboard` now displays a comprehensive overview of the user's activity, including stats and recent cases.
+
 All planned features have been implemented. The core functionality of the Digital Evidence Vault is now in place.
