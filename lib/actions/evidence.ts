@@ -5,7 +5,7 @@ import { auth } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import prisma from '@/lib/prisma';
-import { EvidenceCategory } from '@/lib/types';
+import { EvidenceCategory, CaseCategory } from '@/lib/types';
 
 const EvidenceSchema = z.object({
   caseId: z.string(),
@@ -46,12 +46,14 @@ export async function storeEvidence(metadata: EvidenceMetadata) {
   }
 
   try {
-    await prisma.evidence.create({
+    const newEvidence = await prisma.evidence.create({
       data: {
         ...validatedData,
         userId: userId, // Ensure userId is explicitly set
       },
     });
+    // Call Hedera timestamping action
+    await timestampOnHedera(newEvidence.id);
   } catch (error) {
     // Check for unique constraint violation on fileHash
     if (error instanceof Error && 'code' in error && (error as any).code === 'P2002') {
@@ -121,6 +123,30 @@ export async function getEvidence(filters: GetEvidenceFilters = {}) {
   }
 }
 
+export async function getEvidenceById(evidenceId: string) {
+  const { userId } = auth();
+
+  if (!userId) {
+    redirect('/signin');
+  }
+
+  try {
+    const evidence = await prisma.evidence.findUnique({
+      where: { id: evidenceId, userId },
+      include: { case: true }, // Include related case data
+    });
+
+    if (!evidence) {
+      throw new Error('Evidence not found or unauthorized access.');
+    }
+
+    return evidence;
+  } catch (error) {
+    console.error("Database error fetching evidence by ID:", error);
+    throw new Error('Failed to fetch evidence details.');
+  }
+}
+
 export async function exportSingleEvidence(evidenceId: string) {
   const { userId } = auth();
 
@@ -145,4 +171,24 @@ export async function exportSingleEvidence(evidenceId: string) {
     downloadUrl: placeholderDownloadUrl,
     shareableLink: `${process.env.NEXT_PUBLIC_APP_URL}/share/evidence/${evidenceId}` // Example shareable link
   };
+}
+
+export async function exportAllData() {
+  const { userId } = auth();
+
+  if (!userId) {
+    throw new Error('Unauthorized');
+  }
+
+  try {
+    const allEvidence = await prisma.evidence.findMany({
+      where: { userId },
+      include: { case: true }, // Include related case data
+      orderBy: { uploadDate: 'desc' },
+    });
+    return JSON.stringify(allEvidence, null, 2);
+  } catch (error) {
+    console.error("Database error exporting all evidence:", error);
+    throw new Error('Failed to export all evidence.');
+  }
 }

@@ -12,7 +12,7 @@ const CaseSchema = z.object({
   title: z.string().min(3, { message: 'Title must be at least 3 characters long.' }),
   description: z.string().nullable().optional(),
   category: z.nativeEnum(CaseCategory, { invalid_type_error: "Invalid case category" }),
-  // status: z.nativeEnum(CaseStatus).default(CaseStatus.Active), // Assuming default status
+  status: z.nativeEnum(CaseStatus).default(CaseStatus.Active), // Assuming default status
 });
 
 export async function createCase(formData: FormData) {
@@ -26,6 +26,7 @@ export async function createCase(formData: FormData) {
     title: formData.get('title'),
     description: formData.get('description'),
     category: formData.get('category'),
+    status: CaseStatus.Active, // Set default status for validation
   });
 
   if (!validatedFields.success) {

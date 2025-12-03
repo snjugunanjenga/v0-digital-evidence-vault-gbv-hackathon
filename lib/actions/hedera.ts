@@ -1,25 +1,9 @@
 'use server';
 
-import { auth } from '@clerk/nextjs/server';
-import prisma from '@/lib/prisma';
-import {
-  Client,
-  TopicMessageSubmitTransaction,
-  PrivateKey,
-  TopicId,
-  AccountId,
-} from '@hashgraph/sdk';
+import hederaClient from '@/lib/hedera';
 import { revalidatePath } from 'next/cache';
 
-// Ensure these are set in your .env file
-// You will need to create a Hedera Topic ID manually or via a separate script for now.
 const HEDERA_TOPIC_ID = process.env.HEDERA_TOPIC_ID!;
-const hederaAccountId = process.env.HEDERA_ACCOUNT_ID!;
-const hederaPrivateKey = PrivateKey.fromString(process.env.HEDERA_PRIVATE_KEY!);
-
-// Configure the client for the Hedera testnet or mainnet
-// For production, use Client.forMainnet()
-const client = Client.forTestnet().setOperator(AccountId.fromString(hederaAccountId), hederaPrivateKey);
 
 export async function timestampOnHedera(evidenceId: string) {
   const { userId } = auth();
@@ -45,8 +29,8 @@ export async function timestampOnHedera(evidenceId: string) {
       message: evidence.fileHash,
     });
 
-    const txResponse = await transaction.execute(client);
-    const receipt = await txResponse.getReceipt(client);
+    const txResponse = await transaction.execute(hederaClient);
+    const receipt = await txResponse.getReceipt(hederaClient);
 
     const transactionId = txResponse.transactionId.toString();
     // Hedera timestamps are in nanoseconds since the epoch. Convert to milliseconds for Date.

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { storeEvidence } from '@/lib/actions/evidence';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -11,6 +11,7 @@ import { Progress } from '@/components/ui/progress';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { EVIDENCE_CATEGORIES, EvidenceCategory } from '@/lib/types';
+import dynamic from 'next/dynamic';
 
 // Helper function to convert ArrayBuffer to hex string
 function bufferToHex(buffer: ArrayBuffer) {
@@ -19,7 +20,7 @@ function bufferToHex(buffer: ArrayBuffer) {
     .join('');
 }
 
-export default function UploadEvidencePage() {
+function UploadEvidenceContent() {
   const searchParams = useSearchParams();
   const caseId = searchParams.get('caseId');
 
@@ -73,7 +74,7 @@ export default function UploadEvidencePage() {
             description: description || null,
             category,
             sourcePlatform: sourcePlatform || null,
-            dateOfIncident: new Date(dateOfIncident),
+                        dateOfIncident: new Date(dateOfIncident),
             timestamp: new Date(), // Current timestamp of upload
           };
           
@@ -110,124 +111,136 @@ export default function UploadEvidencePage() {
   }
 
   return (
-    <Card className="max-w-2xl mx-auto">
-      <CardHeader>
-        <CardTitle>Upload Evidence</CardTitle>
+    <div className="space-y-6">
+      <Card className="max-w-2xl mx-auto">
         <CardHeader>
-        <CardDescription>
-          Select a file from your device. Its SHA-256 hash will be calculated in your browser and stored as evidence. The file itself will not be uploaded.
-        </CardDescription>
-      </CardHeader>
-      </CardHeader>
-      <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="space-y-2">
-            <Label htmlFor="file">Select File</Label>
-            <Input id="file" name="file" type="file" required onChange={handleFileChange} disabled={isHashing} />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="category">Category</Label>
-            <Select
-              value={category}
-              onValueChange={(value: EvidenceCategory) => setCategory(value)}
-              disabled={isHashing}
-            >
-              <SelectTrigger className="bg-input border-border">
-                <SelectValue placeholder="Select category" />
-              </SelectTrigger>
-              <SelectContent className="glass-card">
-                {EVIDENCE_CATEGORIES.map((cat) => (
-                  <SelectItem key={cat.value} value={cat.value}>
-                    {cat.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="description">Description (Optional)</Label>
-            <Textarea
-              id="description"
-              placeholder="Brief description of the evidence..."
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              disabled={isHashing}
-              className="bg-input border-border min-h-[80px]"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="sourcePlatform">Source Platform (Optional)</Label>
-            <Input
-              id="sourcePlatform"
-              placeholder="e.g., WhatsApp, Camera, Email"
-              value={sourcePlatform}
-              onChange={(e) => setSourcePlatform(e.target.value)}
-              disabled={isHashing}
-              className="bg-input border-border"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="dateOfIncident">Date of Incident</Label>
-            <Input
-              id="dateOfIncident"
-              type="date"
-              value={dateOfIncident}
-              onChange={(e) => setDateOfIncident(e.target.value)}
-              required
-              disabled={isHashing}
-              className="bg-input border-border"
-            />
-          </div>
-          
-          {isHashing && (
+          <CardTitle>Upload Evidence</CardTitle>
+          <CardDescription>
+            Select a file from your device. Its SHA-256 hash will be calculated in your browser and stored as evidence. The file itself will not be uploaded.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
-              <Label>Hashing Progress</Label>
-              <Progress value={progress} />
-              <p className="text-sm text-muted-foreground">
-                Processing file and generating secure hash... Please do not close this window.
-              </p>
+              <Label htmlFor="file">Select File</Label>
+              <Input id="file" name="file" type="file" required onChange={handleFileChange} disabled={isHashing} />
             </div>
-          )}
 
-          {error && (
-            <p className="text-sm font-medium text-destructive">{error}</p>
-          )}
+            <div className="space-y-2">
+              <Label htmlFor="category">Category</Label>
+              <Select
+                value={category}
+                onValueChange={(value: EvidenceCategory) => setCategory(value)}
+                disabled={isHashing}
+              >
+                <SelectTrigger className="bg-input border-border">
+                  <SelectValue placeholder="Select category" />
+                </SelectTrigger>
+                <SelectContent className="glass-card">
+                  {EVIDENCE_CATEGORIES.map((cat) => (
+                    <SelectItem key={cat.value} value={cat.value}>
+                      {cat.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
 
-          <div className="flex justify-end">
-            <Button type="submit" disabled={!file || isHashing || !category || !dateOfIncident}>
-              {isHashing ? 'Processing...' : 'Hash and Store Evidence'}
+            <div className="space-y-2">
+              <Label htmlFor="description">Description (Optional)</Label>
+              <Textarea
+                id="description"
+                placeholder="Brief description of the evidence..."
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                disabled={isHashing}
+                className="bg-input border-border min-h-[80px]"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="sourcePlatform">Source Platform (Optional)</Label>
+              <Input
+                id="sourcePlatform"
+                placeholder="e.g., WhatsApp, Camera, Email"
+                value={sourcePlatform}
+                onChange={(e) => setSourcePlatform(e.target.value)}
+                disabled={isHashing}
+                className="bg-input border-border"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="dateOfIncident">Date of Incident</Label>
+              <Input
+                id="dateOfIncident"
+                type="date"
+                value={dateOfIncident}
+                onChange={(e) => setDateOfIncident(e.target.value)}
+                required
+                disabled={isHashing}
+                className="bg-input border-border"
+              />
+            </div>
+            
+            {isHashing && (
+              <div className="space-y-2">
+                <Label>Hashing Progress</Label>
+                <Progress value={progress} />
+                <p className="text-sm text-muted-foreground">
+                  Processing file and generating secure hash... Please do not close this window.
+                </p>
+              </div>
+            )}
+
+            {error && (
+              <p className="text-sm font-medium text-destructive">{error}</p>
+            )}
+
+            <div className="flex justify-end">
+              <Button type="submit" disabled={!file || isHashing || !category || !dateOfIncident}>
+                {isHashing ? 'Processing...' : 'Hash and Store Evidence'}
+              </Button>
+            </div>
+          </form>
+        </CardContent>
+      </Card>
+
+      <Card className="max-w-2xl mx-auto mt-6">
+        <CardHeader>
+          <CardTitle>Upload from Cloud Platforms</CardTitle>
+          <CardDescription>
+            Integrate with Google Drive, Dropbox, and other cloud services to upload evidence directly.
+            This feature is coming soon!
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            <Button variant="outline" className="w-full" disabled>
+              Connect Google Drive
             </Button>
+            <Button variant="outline" className="w-full" disabled>
+              Connect Dropbox
+            </Button>
+            {/* Add more cloud platforms as needed */}
+            <p className="text-center text-sm text-muted-foreground">
+              (Cloud integration requires separate authorization and is under development)
+            </p>
           </div>
-        </form>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
 
-    <Card className="max-w-2xl mx-auto mt-6">
-      <CardHeader>
-        <CardTitle>Upload from Cloud Platforms</CardTitle>
-        <CardDescription>
-          Integrate with Google Drive, Dropbox, and other cloud services to upload evidence directly.
-          This feature is coming soon!
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-4">
-          <Button variant="outline" className="w-full" disabled>
-            Connect Google Drive
-          </Button>
-          <Button variant="outline" className="w-full" disabled>
-            Connect Dropbox
-          </Button>
-          {/* Add more cloud platforms as needed */}
-          <p className="text-center text-sm text-muted-foreground">
-            (Cloud integration requires separate authorization and is under development)
-          </p>
-        </div>
-      </CardContent>
-    </Card>
+const DynamicUploadEvidenceContent = dynamic(() => Promise.resolve(UploadEvidenceContent), {
+  ssr: false,
+});
+
+export default function UploadEvidencePage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <DynamicUploadEvidenceContent />
+    </Suspense>
   );
 }

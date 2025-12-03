@@ -40,44 +40,50 @@ export interface Evidence {
   case: Case // This is included from Prisma query
 }
 
-export type CaseCategory =
-  | "domestic-violence"
-  | "sexual-assault"
-  | "harassment"
-  | "stalking"
-  | "cyber-harassment"
-  | "economic-abuse"
-  | "other"
+export enum CaseCategory {
+  "DomesticViolence" = "domestic-violence",
+  "SexualAssault" = "sexual-assault",
+  "Harassment" = "harassment",
+  "Stalking" = "stalking",
+  "CyberHarassment" = "cyber-harassment",
+  "EconomicAbuse" = "economic-abuse",
+  "Other" = "other",
+}
 
-export type CaseStatus = "active" | "archived" | "submitted-to-court"
+export enum CaseStatus {
+  "Active" = "active",
+  "Archived" = "archived",
+  "SubmittedToCourt" = "submitted-to-court",
+}
 
-export type EvidenceCategory =
-  | "messages"
-  | "photos"
-  | "videos"
-  | "audio"
-  | "documents"
-  | "social-media"
-  | "financial"
-  | "other"
+export enum EvidenceCategory {
+  "Messages" = "messages",
+  "Photos" = "photos",
+  "Videos" = "videos",
+  "Audio" = "audio",
+  "Documents" = "documents",
+  "SocialMedia" = "social-media",
+  "Financial" = "financial",
+  "Other" = "other",
+}
 
 export const CASE_CATEGORIES: { value: CaseCategory; label: string }[] = [
-  { value: "domestic-violence", label: "Domestic Violence" },
-  { value: "sexual-assault", label: "Sexual Assault" },
-  { value: "harassment", label: "Harassment" },
-  { value: "stalking", label: "Stalking" },
-  { value: "cyber-harassment", label: "Cyber Harassment" },
-  { value: "economic-abuse", label: "Economic Abuse" },
-  { value: "other", label: "Other" },
-]
+  { value: CaseCategory.DomesticViolence, label: "Domestic Violence" },
+  { value: CaseCategory.SexualAssault, label: "Sexual Assault" },
+  { value: CaseCategory.Harassment, label: "Harassment" },
+  { value: CaseCategory.Stalking, label: "Stalking" },
+  { value: CaseCategory.CyberHarassment, label: "Cyber Harassment" },
+  { value: CaseCategory.EconomicAbuse, label: "Economic Abuse" },
+  { value: CaseCategory.Other, label: "Other" },
+];
 
 export const EVIDENCE_CATEGORIES: { value: EvidenceCategory; label: string }[] = [
-  { value: "messages", label: "Messages/Texts" },
-  { value: "photos", label: "Photos" },
-  { value: "videos", label: "Videos" },
-  { value: "audio", label: "Audio Recordings" },
-  { value: "documents", label: "Documents" },
-  { value: "social-media", label: "Social Media" },
-  { value: "financial", label: "Financial Records" },
-  { value: "other", label: "Other" },
-]
+  { value: EvidenceCategory.Messages, label: "Messages/Texts" },
+  { value: EvidenceCategory.Photos, label: "Photos" },
+  { value: EvidenceCategory.Videos, label: "Videos" },
+  { value: EvidenceCategory.Audio, label: "Audio Recordings" },
+  { value: EvidenceCategory.Documents, label: "Documents" },
+  { value: EvidenceCategory.SocialMedia, label: "Social Media" },
+  { value: EvidenceCategory.Financial, label: "Financial Records" },
+  { value: EvidenceCategory.Other, label: "Other" },
+];
