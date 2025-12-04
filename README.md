@@ -34,6 +34,14 @@
 
 ---
 
+## The Problem Statement
+
+<p align="center">
+  <img src="public/screenshots/problem_statement.png" alt="Problem Statement" width="700">
+</p>
+
+---
+
 ## 📖 About The Project
 
 <p align="center">
@@ -46,6 +54,14 @@ This process ensures that the user's sensitive data is never exposed, while crea
 
 ### Our Mission
 To provide a safe, secure, and user-friendly tool that empowers survivors of GBV to take control of their narrative and seek justice.
+
+---
+
+## Our Solution
+
+<p align="center">
+  <img src="public/screenshots/solution_plan.png" alt="Solution Plan" width="700">
+</p>
 
 ---
 
@@ -62,7 +78,7 @@ To provide a safe, secure, and user-friendly tool that empowers survivors of GBV
     </p>
 -   **📈 Interactive Dashboard:** A comprehensive overview of your cases, evidence, and activity.
     <p align="center">
-      <img src="public/kenya-map-with-glowing-dots-showing-coverage-dark-.jpg" alt="Interactive Dashboard" width="600">
+      <img src="public/screenshots/subscription_plan.png" alt="Interactive Dashboard" width="600">
     </p>
 -   **💻 Modern & Responsive UI:** Built with Next.js, Tailwind CSS, and Shadcn/UI for a seamless experience on any device.
 -   **📥 Data Export:** Easily export your evidence and case data when you need it.
@@ -162,6 +178,17 @@ Don't forget to give the project a star! Thanks again!
 3.  Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
 4.  Push to the Branch (`git push origin feature/AmazingFeature`)
 5.  Open a Pull Request
+
+---
+
+## 👥 Contributors
+
+-   B_rian <129996774+WellBrian@users.noreply.github.com>
+-   Captain AI <47535049+snjugunanjenga@users.noreply.github.com>
+-   JoyWanjiru00 <150961674+JoyWanjiru00@users.noreply.github.com>
+-   JoyWanjiru00 <shirujoylitta@gmail.com>
+-   simpleHacker0893 <simplenjenga4@gmail.com>
+-   v0 <v0[bot]@users.noreply.github.com>
 
 ---
 
