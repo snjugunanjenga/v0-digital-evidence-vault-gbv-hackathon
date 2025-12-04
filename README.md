@@ -224,7 +224,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 ## 📞 Contact
 
-Project Link: [https://github.com/T-G-C/v0-digital-evidence-vault-gbv-hackathon](https://github.com/T-G-C/v0-digital-evidence-vault-gbv-hackathon)
+Project Link: [https://v0-digital-evidence-vault-gbv-hacka.vercel.app/](https://v0-digital-evidence-vault-gbv-hacka.vercel.app/)
 
 ---
 
