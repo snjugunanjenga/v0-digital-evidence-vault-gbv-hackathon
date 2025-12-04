@@ -17,6 +17,11 @@
 </p>
 
 <p align="center">
+  <a href="https://v0-digital-evidence-vault-gbv-hacka.vercel.app/" target="_blank">🚀 Live Demo</a> •
+  <a href="https://www.canva.com/design/DAG6cN3ZeVI/xx_V6sA4mpsFlcjMDAoOuA/view?utm_content=DAG6cN3ZeVI&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h4b5757b832" target="_blank">💡 Pitch Deck</a>
+</p>
+
+<p align="center">
   <a href="#-about-the-project">About</a> •
   <a href="#-key-features">Features</a> •
   <a href="#-tech-stack">Tech Stack</a> •
