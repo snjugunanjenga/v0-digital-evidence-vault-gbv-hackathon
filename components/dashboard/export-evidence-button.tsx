@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from '@/components/ui/button';
 import { exportEvidence } from '@/lib/actions/evidence';
 import { useState, useTransition } from 'react';
