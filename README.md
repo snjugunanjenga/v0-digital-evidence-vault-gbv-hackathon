@@ -85,6 +85,30 @@ To provide a safe, secure, and user-friendly tool that empowers survivors of GBV
 
 ---
 
+## 🎨 User Interface
+
+<p align="center">
+  <img src="public/screenshots/Gemini_Generated_Image_25twr325twr325tw.png" alt="Dashboard" width="700">
+  <em>The user dashboard provides a comprehensive overview of cases and evidence.</em>
+</p>
+
+<p align="center">
+  <img src="public/screenshots/Gemini_Generated_Image_3fehb43fehb43feh.png" alt="Evidence Upload" width="700">
+  <em>Securely upload and manage your digital evidence with client-side hashing.</em>
+</p>
+
+<p align="center">
+  <img src="public/screenshots/Gemini_Generated_Image_6vcvvc6vcvvc6vcv.png" alt="Case Management" width="700">
+  <em>Organize your evidence into cases for easy management and presentation.</em>
+</p>
+
+<p align="center">
+  <img src="public/screenshots/Gemini_Generated_Image_fazs5fazs5fazs5f.png" alt="Evidence Detail" width="700">
+  <em>View detailed information for each piece of evidence, including its hash and timestamp.</em>
+</p>
+
+---
+
 ## 🛠️ Tech Stack
 
 This project is built with a modern, robust, and scalable tech stack:
@@ -188,7 +212,7 @@ Don't forget to give the project a star! Thanks again!
 -   JoyWanjiru00 <150961674+JoyWanjiru00@users.noreply.github.com>
 -   JoyWanjiru00 <shirujoylitta@gmail.com>
 -   simpleHacker0893 <simplenjenga4@gmail.com>
--   v0 <v0[bot]@users.noreply.github.com>
+-   
 
 ---
 
