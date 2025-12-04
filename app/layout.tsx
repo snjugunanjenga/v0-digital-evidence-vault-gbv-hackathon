@@ -2,7 +2,7 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
-import { ClerkProvider } from '@clerk/nextjs'
+import ClerkProviderWrapper from "../components/auth/clerk-provider"
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
 
@@ -30,18 +30,12 @@ export const metadata: Metadata = {
   },
 }
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode
-}>) {
+export default function RootLayout({ children, }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <ClerkProvider>
-      <html lang="en" className="dark">
-        <body data-testim-main-word-scripts-loaded="true" className={`${inter.variable} font-sans antialiased`}>
-          {children}
-        </body>
-      </html>
-    </ClerkProvider>
+    <html lang="en" className="dark">
+      <body data-testim-main-word-scripts-loaded="true" className={`${inter.variable} font-sans antialiased`}>
+        <ClerkProviderWrapper>{children}</ClerkProviderWrapper>
+      </body>
+    </html>
   )
 }

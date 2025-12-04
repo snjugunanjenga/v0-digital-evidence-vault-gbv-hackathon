@@ -7,19 +7,14 @@ const prisma = new PrismaClient();
 async function main() {
   console.log('Seeding database...');
 
-  const saltRounds = 10;
-  const password = 'Pass1234!';
-  const hashedPassword = await bcrypt.hash(password, saltRounds);
+  async function main() {
+  console.log('Seeding database...');
 
-  for (let i = 0; i < 10; i++) {
-    await prisma.user.create({
-      data: {
-        email: faker.internet.email(),
-        password: hashedPassword,
-      },
-    });
-  }
+  // No longer seeding users directly, as they are managed by Clerk.
+  // You can add other seeding logic here if needed for Cases, Evidence, etc.
 
+  console.log('Database seeded successfully.');
+}
   console.log('Database seeded successfully.');
 }
 

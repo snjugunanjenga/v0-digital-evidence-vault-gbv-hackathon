@@ -31,7 +31,20 @@ model Evidence {
   hederaTransactionId String?
   case                Case      @relation(fields: [caseId], references: [id])
   user                User      @relation(fields: [userId], references: [id])
+  testimonyRecord     TestimonyRecord? // One-to-one relationship with TestimonyRecord
 }
+
+model TestimonyRecord {
+  id                  String    @id @default(cuid())
+  evidenceId          String    @unique
+  evidence            Evidence  @relation(fields: [evidenceId], references: [id])
+  audioFileUrl        String
+  rawTranscript       String?
+  userApprovedSummary String?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+}
+
 
 model User {
   id        String     @id

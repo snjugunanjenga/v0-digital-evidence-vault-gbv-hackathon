@@ -1,0 +1,13 @@
+// opencode.jsonc
+// Placed at the root of your project: /workspaces/v0-digital-evidence-vault-gbv-hackathon/
+
+{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "google/gemini-2.5-pro",
+  "tools": {
+    "write": true,
+    "edit": true,
+    "bash": true,
+    "read": true
+  }
+}

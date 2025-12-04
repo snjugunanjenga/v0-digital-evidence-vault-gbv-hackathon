@@ -25,9 +25,13 @@ export default async function CaseDetailPage({ params }: CaseDetailPageProps) {
     return notFound();
   }
 
-  const caseData = await prisma.case.findUnique({
+  // In Next 16 the `params` can be a thenable/promise in some contexts — unwrap it safely
+  const resolvedParams = (await params) as { id: string };
+  const caseId = resolvedParams.id;
+
+  const caseData = await prisma.case.findFirst({
     where: {
-      id: params.id,
+      id: caseId,
       userId: userId, // Security: Ensure the user owns this case
     },
     include: {

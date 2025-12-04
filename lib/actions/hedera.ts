@@ -6,12 +6,32 @@ import { Client, TopicMessageSubmitTransaction, TopicId, TransactionRecord } fro
 import hederaClient from '@/lib/hedera';
 import { revalidatePath } from 'next/cache';
 
+import { checkSubscription } from '@/lib/subscription';
+
 const HEDERA_TOPIC_ID = process.env.HEDERA_TOPIC_ID!;
+const HEDERA_TIMESTAMP_LIMIT = 5; // Example limit for free tier
 
 export async function timestampOnHedera(evidenceId: string) {
-  const { userId } = await auth();
+  const { userId } = auth();
   if (!userId) {
     throw new Error('You must be logged in to timestamp evidence.');
+  }
+
+  const { isPro, userUsage } = await checkSubscription();
+
+  // Create usage record if it doesn't exist, even for pro users to track usage
+  let currentUserUsage = userUsage;
+  if (!currentUserUsage) {
+    currentUserUsage = await prisma.userUsage.create({
+      data: {
+        userId,
+      },
+    });
+  }
+
+  // Free tier is subject to a limit
+  if (!isPro && currentUserUsage.timestampCount >= HEDERA_TIMESTAMP_LIMIT) {
+    throw new Error('You have reached your Hedera timestamp limit. Please upgrade your plan.');
   }
 
   const evidence = await prisma.evidence.findFirst({
@@ -33,11 +53,10 @@ export async function timestampOnHedera(evidenceId: string) {
     });
 
     const txResponse = await transaction.execute(hederaClient);
-    // Get the transaction record for the consensus timestamp
     const transactionRecord = await txResponse.getRecord(hederaClient);
     
     const transactionId = txResponse.transactionId.toString();
-    const consensusTimestamp = transactionRecord.consensusTimestamp?.toDate(); // Correctly get Date from Timestamp
+    const consensusTimestamp = transactionRecord.consensusTimestamp?.toDate();
 
     await prisma.evidence.update({
       where: { id: evidenceId },
@@ -47,8 +66,18 @@ export async function timestampOnHedera(evidenceId: string) {
       },
     });
 
+    // Increment usage count and update lastUsedAt
+    await prisma.userUsage.update({
+      where: { userId },
+      data: {
+        timestampCount: {
+          increment: 1,
+        },
+        lastUsedAt: new Date(),
+      },
+    });
+
     revalidatePath(`/dashboard/cases/${evidence.caseId}`);
-    // return { success: true, transactionId }; // No longer return value for form action
   } catch (error) {
     console.error('Error timestamping on Hedera:', error);
     throw new Error('Failed to timestamp evidence on Hedera.');

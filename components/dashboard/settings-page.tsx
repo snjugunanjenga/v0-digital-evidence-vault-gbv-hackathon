@@ -70,9 +70,9 @@ export function SettingsPage() {
               <CardTitle>Profile & Security</CardTitle>
               <CardDescription>Update your personal information and manage your security settings.</CardDescription>
             </CardHeader>
-            <CardContent>
-              <UserProfile routing="path" path="/dashboard/settings" />
-            </CardContent>
+              <CardContent>
+                <UserProfile routing="hash" />
+              </CardContent>
           </Card>
         </TabsContent>
 

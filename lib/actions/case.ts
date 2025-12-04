@@ -13,7 +13,7 @@ const CaseSchema = z.object({
 });
 
 export async function createCase(formData: FormData) {
-  const { userId } = await auth();
+  const { userId, sessionClaims } = await auth();
 
   if (!userId) {
     throw new Error('Unauthorized');
@@ -35,6 +35,19 @@ export async function createCase(formData: FormData) {
   const { title, description } = validatedFields.data;
 
   try {
+    // Ensure the user exists in the database (upsert to avoid FK constraint violation)
+    // Clerk userId is stored as the id, and we use email from session claims
+    const userEmail = (sessionClaims?.email as string) || `user-${userId}@clerk.local`;
+    
+    await prisma.user.upsert({
+      where: { id: userId },
+      update: {}, // No updates needed if user already exists
+      create: {
+        id: userId,
+        email: userEmail,
+      },
+    });
+
     const newCase = await prisma.case.create({
       data: {
         userId,
@@ -44,10 +57,11 @@ export async function createCase(formData: FormData) {
     });
     revalidatePath('/dashboard'); // Revalidate dashboard to show new case in overview
     revalidatePath('/dashboard/cases'); // Revalidate cases page
-    // return newCase; // No longer return value for form action
+    return newCase;
   } catch (error) {
-    console.error("Database error creating case:", error);
-    throw new Error('Failed to create the case.');
+    console.error("Database error creating case:", error instanceof Error ? error.message : error);
+    // Surface the original error message to help debugging in dev (still throw a friendly error)
+    throw new Error(`Failed to create the case. ${error instanceof Error ? error.message : ''}`);
   }
 }
 
@@ -83,7 +97,7 @@ export async function getCaseById(caseId: string) {
   }
 
   try {
-    const caseItem = await prisma.case.findUnique({
+    const caseItem = await prisma.case.findFirst({
       where: { id: caseId, userId },
       include: {
         evidence: {
