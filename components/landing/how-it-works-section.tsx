@@ -1,4 +1,5 @@
 import { Upload, Hash, Check } from "lucide-react"
+import Image from "next/image"
 
 const steps = [
   {
@@ -14,7 +15,7 @@ const steps = [
     icon: Hash,
     title: "Generate Cryptographic Proof",
     description:
-      "Our system creates a unique SHA-256 hash — a digital fingerprint that proves your evidence hasn't been altered.",
+      "Our system creates a unique SHA-256 hash — a digital fingerprint that proves your evidence hasn&#39;t been altered.",
     image: "/digital-fingerprint-hash-visualization-cybersecuri.jpg",
   },
   {
@@ -60,8 +61,8 @@ export function HowItWorksSection() {
 
               {/* Image */}
               <div className="flex-1 max-w-lg">
-                <div className="aspect-[4/3] rounded-2xl overflow-hidden glass-card neon-border">
-                  <img src={step.image || "/placeholder.svg"} alt={step.title} className="w-full h-full object-cover" />
+                <div className="aspect-[4/3] rounded-2xl overflow-hidden glass-card neon-border relative">
+                  <Image src={step.image || "/placeholder.svg"} alt={step.title} fill className="object-cover" />
                 </div>
               </div>
             </div>

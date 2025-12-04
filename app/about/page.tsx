@@ -36,7 +36,7 @@ export default function AboutPage() {
                 timestamped, verified, and legally defensible.
               </p>
               <p className="text-muted-foreground">
-                Operating in Kenya and across East Africa, we work closely with legal aid organizations, women's
+                Operating in Kenya and across East Africa, we work closely with legal aid organizations, women&#39;s
                 shelters, and law enforcement to ensure our platform meets the needs of those we serve.
               </p>
             </div>

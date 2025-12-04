@@ -1,97 +1,177 @@
-# Digital Evidence Vault
+<p align="center">
+  <a href="#" target="_blank">
+    <img src="public/placeholder-logo.svg" alt="Digital Evidence Vault Logo" width="120">
+  </a>
+</p>
 
-![License](https://img.shields.io/badge/license-MIT-blue.svg)
-![Next.js](https://img.shields.io/badge/Next.js-16.0-black)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.0-38bdf8)
+<h1 align="center">Digital Evidence Vault</h1>
 
-A secure, privacy-focused web application designed to help victims of Gender-Based Violence (GBV) safely store, manage, and verify digital evidence. This platform leverages local cryptographic hashing to ensure evidence integrity while maintaining user privacy.
-<!-- vercel link - https://vercel.com/captain-byus-projects/v0-digital-evidence-vault -->
+<p align="center">
+  A secure, privacy-focused web application designed to help victims of Gender-Based Violence (GBV) safely store, manage, and verify digital evidence.
+</p>
 
-## 🚀 Overview
+<p align="center">
+  <img src="https://img.shields.io/github/license/T-G-C/v0-digital-evidence-vault-gbv-hackathon" alt="License">
+  <img src="https://img.shields.io/github/last-commit/T-G-C/v0-digital-evidence-vault-gbv-hackathon" alt="Last Commit">
+  <img src="https://img.shields.io/github/stars/T-G-C/v0-digital-evidence-vault-gbv-hackathon?style=social" alt="GitHub Stars">
+</p>
 
-The **Digital Evidence Vault** serves as a secure repository where users can:
-- **Upload Evidence**: Store photos, videos, audio, and documents.
-- **Verify Integrity**: Automatically generate SHA-256 hashes locally to prove file authenticity without exposing the raw file content.
-- **Manage Cases**: Organize evidence into specific cases (e.g., Domestic Violence, Harassment).
-- **Simulate Blockchain Verification**: Experience a mocked integration with the Hedera blockchain for immutable timestamping.
+<p align="center">
+  <a href="#-about-the-project">About</a> •
+  <a href="#-key-features">Features</a> •
+  <a href="#-tech-stack">Tech Stack</a> •
+  <a href="#-getting-started">Getting Started</a> •
+  <a href="#-roadmap">Roadmap</a> •
+  <a href="#-contributing">Contributing</a> •
+  <a href="#-license">License</a> •
+  <a href="#-contact">Contact</a>
+</p>
+
+---
+
+## 📖 About The Project
+
+<p align="center">
+  <img src="public/woman-using-secure-digital-vault-app-on-laptop-wit.jpg" alt="Project Screenshot" width="700">
+</p>
+
+The **Digital Evidence Vault** is a crucial tool for individuals facing Gender-Based Violence, providing a secure and private platform to document and preserve evidence. In legal cases, the integrity and chronological order of evidence are paramount. This application empowers users by allowing them to upload various forms of digital evidence (photos, videos, documents), which are then cryptographically hashed on the client-side.
+
+This process ensures that the user's sensitive data is never exposed, while creating an immutable "digital fingerprint" of the evidence. This fingerprint can be used to verify the authenticity and integrity of the evidence at a later date, without revealing the content itself. The platform also simulates integration with the Hedera blockchain to create a tamper-proof timestamp, further strengthening the legal admissibility of the evidence.
+
+### Our Mission
+To provide a safe, secure, and user-friendly tool that empowers survivors of GBV to take control of their narrative and seek justice.
+
+---
 
 ## ✨ Key Features
 
-- **🛡️ Privacy-First Architecture**: Files are processed locally in the browser. Only cryptographic hashes are sent to the server (simulated).
-- **📂 Case Management**: Create and organize multiple cases with categories and descriptions.
-- **📊 Interactive Dashboard**: Get a high-level view of your evidence, recent activities, and verification status.
-- **⚡ Modern UI/UX**: Built with Radix UI and Tailwind CSS for a responsive, accessible, and beautiful interface.
-- **🔒 Secure Verification**: Simulates blockchain-based evidence verification for legal admissibility.
+-   **🔐 Client-Side Hashing:** All files are hashed in the browser (SHA-256) before upload, ensuring user privacy and data integrity. Only the hash is sent to the server.
+    <p align="center">
+      <img src="public/digital-fingerprint-hash-visualization-cybersecuri.jpg" alt="Client-Side Hashing" width="600">
+    </p>
+-   **🗂️ Case Management:** Organize evidence into distinct cases, making it easy to manage and present.
+-   **🔗 Hedera Integration (Simulated):** Simulates timestamping evidence on the Hedera Hashgraph network for immutable proof of existence.
+    <p align="center">
+      <img src="public/blockchain-network-visualization-with-timestamp-da.jpg" alt="Hedera Integration" width="600">
+    </p>
+-   **📈 Interactive Dashboard:** A comprehensive overview of your cases, evidence, and activity.
+    <p align="center">
+      <img src="public/kenya-map-with-glowing-dots-showing-coverage-dark-.jpg" alt="Interactive Dashboard" width="600">
+    </p>
+-   **💻 Modern & Responsive UI:** Built with Next.js, Tailwind CSS, and Shadcn/UI for a seamless experience on any device.
+-   **📥 Data Export:** Easily export your evidence and case data when you need it.
+
+---
 
 ## 🛠️ Tech Stack
 
-- **Framework**: [Next.js 16](https://nextjs.org/) (App Router)
-- **Language**: [TypeScript](https://www.typescriptlang.org/)
-- **Styling**: [Tailwind CSS](https://tailwindcss.com/) & [Radix UI](https://www.radix-ui.com/)
-- **Icons**: [Lucide React](https://lucide.dev/)
-- **Charts**: [Recharts](https://recharts.org/)
-- **State Management**: React Hooks
+This project is built with a modern, robust, and scalable tech stack:
 
-## 🏁 Getting Started
+-   **[Next.js](https://nextjs.org/):** A React framework for building full-stack web applications.
+-   **[TypeScript](https://www.typescriptlang.org/):** A strongly typed programming language that builds on JavaScript.
+-   **[Tailwind CSS](https://tailwindcss.com/):** A utility-first CSS framework for rapid UI development.
+-   **[Shadcn/UI](https://ui.shadcn.com/):** A collection of re-usable components built using Radix UI and Tailwind CSS.
+-   **[Prisma](https://www.prisma.io/):** A next-generation ORM for Node.js and TypeScript.
+-   **[PostgreSQL](https://www.postgresql.org/):** A powerful, open-source object-relational database system.
+-   **[Clerk](https://clerk.com/):** A complete user management solution for authentication and authorization.
+-   **[Hedera Hashgraph](https://hedera.com/):** A decentralized public network for building and deploying dApps.
 
-Follow these steps to set up the project locally.
+---
+
+## 🚀 Getting Started
+
+To get a local copy up and running, follow these simple steps.
 
 ### Prerequisites
 
-- Node.js 18+ installed
-- npm or pnpm installed
+-   [Node.js](https://nodejs.org/en/) (v18 or higher)
+-   [pnpm](https://pnpm.io/installation) (or npm/yarn)
+-   [Docker](https://www.docker.com/get-started) (for running a local PostgreSQL database)
 
 ### Installation
 
-1.  **Clone the repository**
-    ```bash
-    git clone https://github.com/your-username/digital-evidence-vault.git
-    cd digital-evidence-vault
+1.  **Clone the repository:**
+    ```sh
+    git clone https://github.com/T-G-C/v0-digital-evidence-vault-gbv-hackathon.git
+    cd v0-digital-evidence-vault-gbv-hackathon
     ```
 
-2.  **Install dependencies**
-    ```bash
-    npm install
-    # or
+2.  **Install dependencies:**
+    ```sh
     pnpm install
     ```
 
-3.  **Run the development server**
-    ```bash
-    npm run dev
-    # or
+3.  **Set up environment variables:**
+    Create a `.env` file in the root of the project and add the following variables. You can use the `.env.example` file as a template.
+    ```env
+    # .env
+    DATABASE_URL="postgresql://<user>:<password>@<host>:<port>/<dbname>?sslmode=require"
+
+    # Clerk
+    NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=""
+    CLERK_SECRET_KEY=""
+
+    # Hedera Configuration - Get these from the Hedera Developer Portal (https://portal.hedera.com/)
+    HEDERA_ACCOUNT_ID="YOUR_HEDERA_ACCOUNT_ID"
+    HEDERA_PRIVATE_KEY="YOUR_HEDERA_PRIVATE_KEY"
+    HEDERA_TOPIC_ID="YOUR_HEDERA_TOPIC_ID"
+    ```
+
+4.  **Set up the database:**
+    Run the following command to apply database migrations:
+    ```sh
+    pnpm prisma migrate dev
+    ```
+
+5.  **Run the development server:**
+    ```sh
     pnpm dev
     ```
 
-4.  **Open the app**
-    Visit [http://localhost:3000](http://localhost:3000) in your browser.
+The application should now be running at [http://localhost:3000](http://localhost:3000).
 
-## 📁 Project Structure
+---
 
-```
-├── app/                  # Next.js App Router pages
-│   ├── dashboard/        # Dashboard routes (cases, upload, etc.)
-│   ├── layout.tsx        # Root layout
-│   └── page.tsx          # Landing page
-├── components/           # Reusable UI components
-│   ├── dashboard/        # Dashboard-specific components
-│   ├── landing/          # Landing page components
-│   └── ui/               # Generic UI components (buttons, inputs, etc.)
-├── lib/                  # Utility functions and types
-└── public/               # Static assets
-```
+## 🗺️ Roadmap
+
+-   [ ] **Full Hedera Integration:** Move from a simulated to a live Hedera integration.
+-   [ ] **End-to-End Encryption:** Implement end-to-end encryption for all user data.
+-   [ ] **AI-Powered Insights:** Use AI to help users categorize and tag evidence.
+-   [ ] **Legal Professional Collaboration:** Allow users to securely share evidence with legal professionals.
+-   [ ] **Mobile Application:** Develop a native mobile application for iOS and Android.
+
+See the [open issues](https://github.com/T-G-C/v0-digital-evidence-vault-gbv-hackathon/issues) for a full list of proposed features (and known issues).
+
+---
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
-1.  Fork the project
-2.  Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3.  Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4.  Push to the branch (`git push origin feature/AmazingFeature`)
+If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
+Don't forget to give the project a star! Thanks again!
+
+1.  Fork the Project
+2.  Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3.  Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4.  Push to the Branch (`git push origin feature/AmazingFeature`)
 5.  Open a Pull Request
+
+---
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+Distributed under the MIT License. See `LICENSE` for more information.
+
+---
+
+## 📞 Contact
+
+Project Link: [https://github.com/T-G-C/v0-digital-evidence-vault-gbv-hackathon](https://github.com/T-G-C/v0-digital-evidence-vault-gbv-hackathon)
+
+---
+
+<p align="center">
+  <em>A sanctuary for truth, a fortress for justice.</em>
+</p>

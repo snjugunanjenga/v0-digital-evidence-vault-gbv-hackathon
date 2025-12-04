@@ -16,7 +16,7 @@ interface Case {
 }
 
 export default async function DashboardPage() {
-  const { userId } = auth();
+  const { userId } = await auth();
 
   if (!userId) {
     // This case should ideally be handled by middleware,
@@ -46,7 +46,7 @@ export default async function DashboardPage() {
         <Card>
           <CardContent className="pt-6">
             <p className="text-center text-muted-foreground">
-              You haven't created any cases yet.
+              You haven&#39;t created any cases yet.
             </p>
           </CardContent>
         </Card>

@@ -57,7 +57,7 @@ export default function LegalGuidePage() {
                         <h3 className="font-medium text-foreground mb-2">Authenticity</h3>
                         <p className="text-muted-foreground">
                           Evidence must be proven to be what it claims to be. Our SHA-256 hashing provides a
-                          cryptographic guarantee that files haven't been altered.
+                          cryptographic guarantee that files haven&#39;t been altered.
                         </p>
                       </div>
                       <div>
@@ -71,7 +71,7 @@ export default function LegalGuidePage() {
                         <h3 className="font-medium text-foreground mb-2">Integrity</h3>
                         <p className="text-muted-foreground">
                           Evidence must remain unchanged from collection to presentation. Hash verification proves your
-                          files haven't been modified.
+                          files haven&#39;t been modified.
                         </p>
                       </div>
                     </div>

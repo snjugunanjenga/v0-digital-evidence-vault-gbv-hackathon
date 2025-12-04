@@ -10,7 +10,7 @@ export default async function AuthUsageExample() {
   // It will throw an error if the user is not authenticated, which can be
   // caught by a parent Error Boundary or middleware.
   // If the page is public, you might handle this differently.
-  const { userId, sessionClaims } = auth();
+  const { userId, sessionClaims } = await auth();
 
   // The `currentUser()` helper fetches the full user object from Clerk's API.
   // This is useful for accessing user profile information like name, email, or profile image.

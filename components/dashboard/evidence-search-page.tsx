@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useTransition } from "react"
+import { useState, useEffect, useTransition, useMemo } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -27,31 +27,28 @@ export function EvidenceSearchPage({ initialEvidence, cases }: EvidenceSearchPag
     dateTo: "",
   })
   const [showFilters, setShowFilters] = useState(false)
-  const [currentEvidence, setCurrentEvidence] = useState(initialEvidence)
+  const [serverFetchedEvidence, setServerFetchedEvidence] = useState<Evidence[] | null>(null)
   const [isPending, startTransition] = useTransition()
 
-  useEffect(() => {
-    // Client-side filtering on initial load, or when filters change if we don't re-fetch
-    // For full server-side filtering, this useEffect would trigger the server action.
-    const filtered = initialEvidence.filter((evidence) => {
+  const clientFilteredInitialEvidence = useMemo(() => {
+    return initialEvidence.filter((evidence) => {
       const matchesSearch =
         searchQuery === "" ||
         evidence.fileName.toLowerCase().includes(searchQuery.toLowerCase()) ||
         (evidence.description && evidence.description.toLowerCase().includes(searchQuery.toLowerCase())) ||
-        evidence.hash.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        evidence.fileHash.toLowerCase().includes(searchQuery.toLowerCase()) ||
         (evidence.hederaTransactionId && evidence.hederaTransactionId.toLowerCase().includes(searchQuery.toLowerCase()))
 
       const matchesCase = filters.caseId === "all" || evidence.caseId === filters.caseId
 
-      const matchesCategory = filters.category === "all" || evidence.category === filters.category
+      const matchesCategory = filters.category === "all" || (evidence.category && evidence.category === filters.category)
 
-      const evidenceDate = new Date(evidence.dateOfIncident)
-      const matchesDateFrom = !filters.dateFrom || evidenceDate >= new Date(filters.dateFrom)
-      const matchesDateTo = !filters.dateTo || evidenceDate <= new Date(filters.dateTo)
+      const evidenceDate = evidence.dateOfIncident ? new Date(evidence.dateOfIncident) : null
+      const matchesDateFrom = !filters.dateFrom || (evidenceDate && evidenceDate >= new Date(filters.dateFrom))
+      const matchesDateTo = !filters.dateTo || (evidenceDate && evidenceDate <= new Date(filters.dateTo))
 
       return matchesSearch && matchesCase && matchesCategory && matchesDateFrom && matchesDateTo
     })
-    setCurrentEvidence(filtered);
   }, [searchQuery, filters, initialEvidence])
 
   const handleFilterChange = (key: string, value: string) => {
@@ -72,7 +69,7 @@ export function EvidenceSearchPage({ initialEvidence, cases }: EvidenceSearchPag
         dateFrom: filters.dateFrom ? new Date(filters.dateFrom) : undefined,
         dateTo: filters.dateTo ? new Date(filters.dateTo) : undefined,
       });
-      setCurrentEvidence(fetchedEvidence);
+      setServerFetchedEvidence(fetchedEvidence);
     });
   };
 
@@ -105,11 +102,13 @@ export function EvidenceSearchPage({ initialEvidence, cases }: EvidenceSearchPag
       dateFrom: "",
       dateTo: "",
     });
-    setCurrentEvidence(initialEvidence); // Reset to all initial evidence
+    setServerFetchedEvidence(null); // Reset server fetched evidence
   }
 
   const hasActiveFilters =
     searchQuery !== "" || filters.caseId !== "all" || filters.category !== "all" || filters.dateFrom !== "" || filters.dateTo !== ""
+
+  const displayedEvidence = serverFetchedEvidence || clientFilteredInitialEvidence;
 
   return (
     <div className="space-y-6">
@@ -222,13 +221,13 @@ export function EvidenceSearchPage({ initialEvidence, cases }: EvidenceSearchPag
       {/* Results Count */}
       <div className="flex items-center justify-between">
         <p className="text-sm text-muted-foreground">
-          Showing {currentEvidence.length} of {initialEvidence.length} evidence items
+          Showing {displayedEvidence.length} of {initialEvidence.length} evidence items
         </p>
       </div>
 
       {/* Results Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {currentEvidence.map((evidence) => {
+        {displayedEvidence.map((evidence: Evidence) => {
           const FileIcon = getFileIcon(evidence.fileType)
           return (
             <Card key={evidence.id} className="glass-card hover:neon-border transition-all group">
@@ -248,14 +247,14 @@ export function EvidenceSearchPage({ initialEvidence, cases }: EvidenceSearchPag
                     Verified
                   </Badge>
                   <Badge variant="outline" className="bg-secondary/10 text-secondary border-secondary/30 text-xs">
-                    {getCategoryLabel(evidence.category)}
+                    {evidence.category ? getCategoryLabel(evidence.category) : "N/A"}
                   </Badge>
                 </div>
 
                 <div className="mt-3 space-y-1 text-xs text-muted-foreground">
                   <div className="flex items-center gap-2">
                     <Calendar className="w-3 h-3" />
-                    <span>{new Date(evidence.dateOfIncident).toLocaleDateString()}</span>
+                    <span>{evidence.dateOfIncident ? new Date(evidence.dateOfIncident).toLocaleDateString() : "N/A"}</span>
                   </div>
                   <p className="truncate">Case: {getCaseName(evidence.caseId)}</p>
                 </div>
@@ -286,7 +285,7 @@ export function EvidenceSearchPage({ initialEvidence, cases }: EvidenceSearchPag
         })}
       </div>
 
-      {currentEvidence.length === 0 && (
+      {displayedEvidence.length === 0 && (
         <div className="text-center py-16">
           <Search className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
           <h3 className="text-lg font-medium text-foreground mb-2">No evidence found</h3>

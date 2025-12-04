@@ -1,5 +1,5 @@
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
   binaryTargets = ["native", "rhel-openssl-1.0.x"]
 }
 
@@ -8,26 +8,14 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id        String     @id @default(cuid())
-  email     String     @unique
-  // NOTE: Storing passwords in plain text is a significant security risk.
-  // For production environments, it is strongly recommended to hash passwords
-  // using a library like bcrypt before storing them.
-  password  String
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  cases     Case[]     // Defines a one-to-many relationship: A User can have many Cases.
-}
-
 model Case {
-  id          String    @id @default(cuid())
+  id          String     @id @default(cuid())
   title       String
   description String?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  userId      String    // Foreign key referencing the User's ID.
-  user        User      @relation(fields: [userId], references: [id]) // Explicit relation to the User model.
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  userId      String
+  user        User       @relation(fields: [userId], references: [id])
   evidence    Evidence[]
 }
 
@@ -38,8 +26,27 @@ model Evidence {
   fileHash            String    @unique
   uploadDate          DateTime  @default(now())
   caseId              String
-  case                Case      @relation(fields: [caseId], references: [id])
   userId              String
-  hederaTransactionId String?
   hederaTimestamp     DateTime?
+  hederaTransactionId String?
+  case                Case      @relation(fields: [caseId], references: [id])
+  user                User      @relation(fields: [userId], references: [id])
+}
+
+model User {
+  id        String     @id
+  email     String     @unique
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  cases     Case[]
+  evidence  Evidence[]
+  usage     UserUsage?
+}
+
+model UserUsage {
+  id             String   @id @default(cuid())
+  userId         String   @unique
+  user           User     @relation(fields: [userId], references: [id])
+  timestampCount Int      @default(0)
+  lastUsedAt     DateTime @updatedAt
 }

@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { ChevronLeft, ChevronRight, Quote } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import Image from "next/image"
 
 const testimonials = [
   {
@@ -23,7 +24,7 @@ const testimonials = [
   },
   {
     quote:
-      "As a legal aid provider, I've seen how crucial digital evidence has become. GBV Vault gives survivors a way to preserve evidence that courts trust. It's been instrumental in several of our cases.",
+      "As a legal aid provider, I&#39;ve seen how crucial digital evidence has become. GBV Vault gives survivors a way to preserve evidence that courts trust. It&#39;s been instrumental in several of our cases.",
     name: "Advocate Jane M.",
     location: "Kisumu",
     caseType: "Legal Aid Provider",
@@ -64,17 +65,18 @@ export function TestimonialsSection() {
 
             <div className="flex flex-col md:flex-row items-center gap-8">
               {/* Image */}
-              <div className="w-24 h-24 rounded-full overflow-hidden ring-2 ring-primary/50 flex-shrink-0">
-                <img
+              <div className="w-24 h-24 rounded-full overflow-hidden ring-2 ring-primary/50 flex-shrink-0 relative">
+                <Image
                   src={current.image || "/placeholder.svg"}
                   alt="Testimonial"
+                  fill
                   className="w-full h-full object-cover"
                 />
               </div>
 
               {/* Content */}
               <div className="flex-1 text-center md:text-left">
-                <p className="text-lg md:text-xl text-foreground leading-relaxed mb-6 italic">"{current.quote}"</p>
+                <p className="text-lg md:text-xl text-foreground leading-relaxed mb-6 italic">{current.quote}</p>
                 <div>
                   <p className="font-semibold text-foreground">{current.name}</p>
                   <p className="text-sm text-muted-foreground">

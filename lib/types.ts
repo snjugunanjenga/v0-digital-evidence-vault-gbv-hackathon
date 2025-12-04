@@ -16,28 +16,30 @@ export interface Case {
   id: string
   title: string
   description: string | null
-  category: CaseCategory
-  status: CaseStatus
   createdAt: Date
   updatedAt: Date
-  _count?: { evidence: number } // Added for getCases result
+  userId: string // Added to match Prisma model
+  _count?: { evidence: number } // Keep this
 }
 
 export interface Evidence {
   id: string
   caseId: string
+  userId: string
   fileName: string
   fileType: string
-  fileSize: number
-  hash: string
+  fileHash: string // Renamed from 'hash' to 'fileHash'
+  uploadDate: Date // Added from Prisma schema
   hederaTransactionId: string | null
-  timestamp: Date
-  sourcePlatform: string
-  dateOfIncident: Date
-  description: string | null
-  category: EvidenceCategory
+  hederaTimestamp: Date | null
+  fileSize?: number | null // Made optional and nullable
+  timestamp?: Date | null // Made optional and nullable (if this is different from hederaTimestamp)
+  sourcePlatform?: string | null // Made optional and nullable
+  dateOfIncident?: Date | null // Made optional and nullable
+  description?: string | null // Made optional and nullable
+  category?: EvidenceCategory | null // Made optional and nullable
   thumbnailUrl?: string
-  case: Case // This is included from Prisma query
+  case: Case
 }
 
 export enum CaseCategory {
@@ -70,7 +72,7 @@ export enum EvidenceCategory {
 export const CASE_CATEGORIES: { value: CaseCategory; label: string }[] = [
   { value: CaseCategory.DomesticViolence, label: "Domestic Violence" },
   { value: CaseCategory.SexualAssault, label: "Sexual Assault" },
-  { value: CaseCategory.Harassment, label: "Harassment" },
+  { value: CaseCategory.Harassment, label: "Work-place Harassment" },
   { value: CaseCategory.Stalking, label: "Stalking" },
   { value: CaseCategory.CyberHarassment, label: "Cyber Harassment" },
   { value: CaseCategory.EconomicAbuse, label: "Economic Abuse" },

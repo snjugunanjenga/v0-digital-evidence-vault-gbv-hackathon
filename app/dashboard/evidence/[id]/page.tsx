@@ -1,18 +1,20 @@
 import { notFound } from 'next/navigation';
-import { auth } from '@/lib/actions/auth';
+import { auth, currentUser } from '@clerk/nextjs/server';
+import prisma from '@/lib/prisma';
 import { getEvidenceById } from '@/lib/actions/evidence';
-import { DashboardHeader } from '@/components/dashboard/header';
+// import { DashboardHeader } from '@/components/dashboard/header'; // Removed as it does not accept title/description props
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ExportSingleEvidenceButton } from '@/components/dashboard/export-single-evidence-button';
+import { ExportEvidenceButton as ExportSingleEvidenceButton } from '@/components/dashboard/export-evidence-button';
 
 interface EvidenceDetailPageProps {
   params: { id: string };
 }
 
 export default async function EvidenceDetailPage({ params }: EvidenceDetailPageProps) {
-  const { user } = await auth();
+  const { userId } = await auth();
+  const user = await currentUser();
 
-  if (!user) {
+  if (!userId) {
     notFound();
   }
 
@@ -25,12 +27,13 @@ export default async function EvidenceDetailPage({ params }: EvidenceDetailPageP
 
   return (
     <div className="flex flex-col space-y-6">
-      <DashboardHeader
-        heading={`Evidence: ${evidence.fileName}`}
-        text={`Details for evidence ID: ${evidence.id}`}
-      />
+      {/* Page Header */}
+      <div>
+        <h1 className="text-2xl font-bold text-foreground">Evidence: {evidence.fileName}</h1>
+        <p className="text-muted-foreground">Details for evidence ID: {evidence.id}</p>
+      </div>
       <div className="flex justify-end">
-        <ExportSingleEvidenceButton evidenceData={evidence} />
+        <ExportSingleEvidenceButton evidenceId={evidence.id} />
       </div>
       <Card>
         <CardHeader>

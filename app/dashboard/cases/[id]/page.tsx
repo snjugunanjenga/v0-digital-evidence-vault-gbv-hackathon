@@ -1,3 +1,5 @@
+import type { Evidence } from '@/lib/types'; // Import Evidence type
+
 import { auth } from '@clerk/nextjs/server';
 import prisma from '@/lib/prisma';
 import { notFound } from 'next/navigation';
@@ -17,7 +19,7 @@ interface CaseDetailPageProps {
 }
 
 export default async function CaseDetailPage({ params }: CaseDetailPageProps) {
-  const { userId } = auth();
+  const { userId } = await auth();
 
   if (!userId) {
     return notFound();
@@ -29,7 +31,7 @@ export default async function CaseDetailPage({ params }: CaseDetailPageProps) {
       userId: userId, // Security: Ensure the user owns this case
     },
     include: {
-      evidence: true, // Include all related evidence
+      evidence: { include: { case: true } }, // Include all related evidence with nested case
     },
   });
 
@@ -81,7 +83,7 @@ export default async function CaseDetailPage({ params }: CaseDetailPageProps) {
             </TableHeader>
             <TableBody>
               {caseData.evidence.length > 0 ? (
-                caseData.evidence.map((evidence) => (
+                caseData.evidence.map((evidence: Evidence) => ( // Explicitly type evidence here
                   <TableRow key={evidence.id}>
                     <TableCell>{evidence.fileName}</TableCell>
                     <TableCell>{evidence.fileType}</TableCell>

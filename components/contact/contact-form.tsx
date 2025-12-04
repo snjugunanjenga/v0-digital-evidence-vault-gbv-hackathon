@@ -52,7 +52,7 @@ export function ContactForm() {
           </div>
           <h3 className="text-xl font-bold text-foreground mb-2">Message Sent</h3>
           <p className="text-muted-foreground mb-6">
-            Thank you for reaching out. We'll get back to you within 24-48 hours.
+            Thank you for reaching out. We&#39;ll get back to you within 24-48 hours.
           </p>
           <Button
             onClick={() => {

@@ -18,7 +18,7 @@ export default function ContactPage() {
               Get In <span className="text-primary neon-text">Touch</span>
             </h1>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              We're here to help. Reach out for support, partnerships, or any questions about GBV Vault.
+              We&#39;re here to help. Reach out for support, partnerships, or any questions about GBV Vault.
             </p>
           </div>
 

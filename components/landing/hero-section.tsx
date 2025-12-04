@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { ArrowRight, Lock, Clock, FileCheck } from "lucide-react"
+import Image from "next/image"
 
 export function HeroSection() {
   return (
@@ -76,10 +77,11 @@ export function HeroSection() {
 
         <div className="mt-16 relative max-w-5xl mx-auto">
           <div className="aspect-video rounded-2xl overflow-hidden neon-border">
-            <img
+            <Image
               src="/images/gemini-generated-image-g1db6sg1db6sg1db.jpeg"
               alt="Community standing together against gender-based violence - women holding signs saying Stop Violence and Help Her"
-              className="w-full h-full object-cover"
+              fill
+              className="object-cover"
             />
           </div>
           {/* Floating Stats */}

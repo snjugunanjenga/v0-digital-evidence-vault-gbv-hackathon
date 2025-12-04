@@ -1,12 +1,15 @@
 'use server';
 
+import { auth } from '@clerk/nextjs/server';
+import prisma from '@/lib/prisma';
+import { Client, TopicMessageSubmitTransaction, TopicId, TransactionRecord } from "@hashgraph/sdk";
 import hederaClient from '@/lib/hedera';
 import { revalidatePath } from 'next/cache';
 
 const HEDERA_TOPIC_ID = process.env.HEDERA_TOPIC_ID!;
 
 export async function timestampOnHedera(evidenceId: string) {
-  const { userId } = auth();
+  const { userId } = await auth();
   if (!userId) {
     throw new Error('You must be logged in to timestamp evidence.');
   }
@@ -30,17 +33,11 @@ export async function timestampOnHedera(evidenceId: string) {
     });
 
     const txResponse = await transaction.execute(hederaClient);
-    const receipt = await txResponse.getReceipt(hederaClient);
-
+    // Get the transaction record for the consensus timestamp
+    const transactionRecord = await txResponse.getRecord(hederaClient);
+    
     const transactionId = txResponse.transactionId.toString();
-    // Hedera timestamps are in nanoseconds since the epoch. Convert to milliseconds for Date.
-    const consensusTimestampNs = receipt.consensusTimestamp?.asString();
-    let consensusTimestamp: Date | undefined;
-    if (consensusTimestampNs) {
-      const seconds = parseInt(consensusTimestampNs.substring(0, 10));
-      const nanos = parseInt(consensusTimestampNs.substring(10, 19));
-      consensusTimestamp = new Date(seconds * 1000 + nanos / 1_000_000);
-    }
+    const consensusTimestamp = transactionRecord.consensusTimestamp?.toDate(); // Correctly get Date from Timestamp
 
     await prisma.evidence.update({
       where: { id: evidenceId },
@@ -51,7 +48,7 @@ export async function timestampOnHedera(evidenceId: string) {
     });
 
     revalidatePath(`/dashboard/cases/${evidence.caseId}`);
-    return { success: true, transactionId };
+    // return { success: true, transactionId }; // No longer return value for form action
   } catch (error) {
     console.error('Error timestamping on Hedera:', error);
     throw new Error('Failed to timestamp evidence on Hedera.');

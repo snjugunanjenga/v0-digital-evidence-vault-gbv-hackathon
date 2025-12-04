@@ -5,10 +5,9 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { FolderOpen, FileCheck, Clock, Shield, Plus, ArrowRight } from "lucide-react"
 import type { Case, Evidence } from "@/lib/types"
-import type { Session } from "next-auth"
+// import type { Session } from "next-auth" // Removed NextAuth import
 
 interface DashboardOverviewProps {
-  session: Session | null
   stats: {
     totalCases: number
     totalEvidence: number
@@ -19,8 +18,8 @@ interface DashboardOverviewProps {
   recentEvidence: Evidence[]
 }
 
-export function DashboardOverview({ session, stats, recentCases, recentEvidence }: DashboardOverviewProps) {
-  const userName = session?.user?.name?.split(" ")[0] || "there"
+export function DashboardOverview({ stats, recentCases, recentEvidence }: DashboardOverviewProps) {
+  const userName = "there" // Simplified welcome message
   return (
     <div className="space-y-8">
       {/* Welcome */}

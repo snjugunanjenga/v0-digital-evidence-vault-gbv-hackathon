@@ -1,3 +1,5 @@
+import Image from "next/image"
+
 const stats = [
   { value: "2,500+", label: "Survivors Supported" },
   { value: "15,000+", label: "Evidence Records" },
@@ -32,11 +34,12 @@ export function ImpactSection() {
               ))}
             </div>
 
-            <div className="mt-12 aspect-[2/1] rounded-2xl overflow-hidden">
-              <img
+            <div className="mt-12 aspect-[2/1] rounded-2xl overflow-hidden relative">
+              <Image
                 src="/images/gemini-generated-image-u9b4gku9b4gku9b4.jpeg"
                 alt="Woman wearing Stop GBV shirt raising hand in resistance - community empowerment against gender-based violence"
-                className="w-full h-full object-cover"
+                fill
+                className="object-cover"
               />
             </div>
           </div>

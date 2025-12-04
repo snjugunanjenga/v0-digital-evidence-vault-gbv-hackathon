@@ -6,6 +6,7 @@ import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import prisma from '@/lib/prisma';
 import { EvidenceCategory, CaseCategory } from '@/lib/types';
+import { timestampOnHedera } from '@/lib/actions/hedera';
 
 const EvidenceSchema = z.object({
   caseId: z.string(),
@@ -15,7 +16,7 @@ const EvidenceSchema = z.object({
   // Add optional fields for `hederaTransactionId`, `timestamp`, `sourcePlatform`, `dateOfIncident`, `description`, `category`
   hederaTransactionId: z.string().nullable().optional(),
   timestamp: z.date().optional(),
-  sourcePlatform: z.string().optional(),
+  sourcePlatform: z.string().nullable().optional(),
   dateOfIncident: z.date().optional(),
   description: z.string().nullable().optional(),
   category: z.nativeEnum(EvidenceCategory).optional(),
@@ -25,7 +26,7 @@ const EvidenceSchema = z.object({
 type EvidenceMetadata = z.infer<typeof EvidenceSchema>;
 
 export async function storeEvidence(metadata: EvidenceMetadata) {
-  const { userId } = auth();
+  const { userId } = await auth();
 
   if (!userId) {
     throw new Error('You must be logged in to store evidence.');
@@ -75,7 +76,7 @@ interface GetEvidenceFilters {
 }
 
 export async function getEvidence(filters: GetEvidenceFilters = {}) {
-  const { userId } = auth();
+  const { userId } = await auth();
 
   if (!userId) {
     redirect('/signin');
@@ -86,7 +87,7 @@ export async function getEvidence(filters: GetEvidenceFilters = {}) {
   if (filters.caseId && filters.caseId !== 'all') {
     whereClause.caseId = filters.caseId;
   }
-  if (filters.category && filters.category !== 'all') {
+  if (filters.category) {
     whereClause.category = filters.category;
   }
 
@@ -124,7 +125,7 @@ export async function getEvidence(filters: GetEvidenceFilters = {}) {
 }
 
 export async function getEvidenceById(evidenceId: string) {
-  const { userId } = auth();
+  const { userId } = await auth();
 
   if (!userId) {
     redirect('/signin');
@@ -147,8 +148,8 @@ export async function getEvidenceById(evidenceId: string) {
   }
 }
 
-export async function exportSingleEvidence(evidenceId: string) {
-  const { userId } = auth();
+export async function exportEvidence(evidenceId: string) {
+  const { userId } = await auth();
 
   if (!userId) {
     throw new Error('Unauthorized');
@@ -162,19 +163,11 @@ export async function exportSingleEvidence(evidenceId: string) {
     throw new Error('Evidence not found or unauthorized.');
   }
 
-  // In a real application, this would generate a secure, temporary download URL
-  // for the actual file stored in cloud storage (e.g., S3, Azure Blob, Google Cloud Storage).
-  // For now, we'll return a placeholder URL.
-  const placeholderDownloadUrl = `/api/download-evidence?id=${evidenceId}&token=YOUR_SECURE_TOKEN`;
-
-  return {
-    downloadUrl: placeholderDownloadUrl,
-    shareableLink: `${process.env.NEXT_PUBLIC_APP_URL}/share/evidence/${evidenceId}` // Example shareable link
-  };
+  return JSON.stringify(evidence, null, 2);
 }
 
 export async function exportAllData() {
-  const { userId } = auth();
+  const { userId } = await auth();
 
   if (!userId) {
     throw new Error('Unauthorized');

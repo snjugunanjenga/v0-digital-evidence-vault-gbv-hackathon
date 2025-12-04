@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Evidence } from '@prisma/client';
+import type { Evidence } from '@/lib/types';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 

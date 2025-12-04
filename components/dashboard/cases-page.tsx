@@ -11,8 +11,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Plus, Search, FolderOpen, MoreVertical, Calendar } from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import type { Case, CaseCategory } from "@/lib/types"
-import { CASE_CATEGORIES } from "@/lib/types"
+import type { Case } from "@/lib/types"
 import { createCase } from "@/lib/actions/case"
 import { useRouter } from 'next/navigation'
 
@@ -22,12 +21,12 @@ interface CasesPageProps {
 
 export function CasesPage({ cases: initialCases }: CasesPageProps) {
   const [searchQuery, setSearchQuery] = useState("")
-  const [categoryFilter, setCategoryFilter] = useState<string>("all")
+  // const [categoryFilter, setCategoryFilter] = useState<string>("all") // Removed category filter
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
   const [newCase, setNewCase] = useState({
     title: "",
     description: "",
-    category: "" as CaseCategory,
+    // category: "" as CaseCategory, // Removed category
   })
   const [cases, setCases] = useState(initialCases);
   const router = useRouter();
@@ -36,31 +35,8 @@ export function CasesPage({ cases: initialCases }: CasesPageProps) {
     const matchesSearch =
       caseItem.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       (caseItem.description && caseItem.description.toLowerCase().includes(searchQuery.toLowerCase()))
-    const matchesCategory = categoryFilter === "all" || caseItem.category === categoryFilter
-    return matchesSearch && matchesCategory
+    return matchesSearch
   })
-
-  const handleCreateCase = async () => {
-    const formData = new FormData();
-    formData.append('title', newCase.title);
-    formData.append('description', newCase.description);
-    formData.append('category', newCase.category);
-
-    try {
-      const createdCase = await createCase(formData);
-      setCases((prev) => [createdCase, ...prev]);
-      setIsCreateDialogOpen(false);
-      setNewCase({ title: "", description: "", category: "" as CaseCategory });
-      router.refresh(); // Refresh current route to re-fetch server components
-    } catch (error) {
-      console.error("Error creating case:", error);
-      // Handle error display to user
-    }
-  };
-
-  const getCategoryLabel = (category: CaseCategory) => {
-    return CASE_CATEGORIES.find((c) => c.value === category)?.label || category
-  }
 
   return (
     <div className="space-y-6">
@@ -92,24 +68,7 @@ export function CasesPage({ cases: initialCases }: CasesPageProps) {
                   className="bg-input border-border"
                 />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="category">Category</Label>
-                <Select
-                  value={newCase.category}
-                  onValueChange={(value) => setNewCase({ ...newCase, category: value as CaseCategory })}
-                >
-                  <SelectTrigger className="bg-input border-border">
-                    <SelectValue placeholder="Select category" />
-                  </SelectTrigger>
-                  <SelectContent className="glass-card">
-                    {CASE_CATEGORIES.map((cat) => (
-                      <SelectItem key={cat.value} value={cat.value}>
-                        {cat.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+              {/* Removed Category selection */}
               <div className="space-y-2">
                 <Label htmlFor="description">Description</Label>
                 <Textarea
@@ -121,7 +80,20 @@ export function CasesPage({ cases: initialCases }: CasesPageProps) {
                 />
               </div>
               <Button
-                onClick={handleCreateCase}
+                onClick={async () => {
+                  const formData = new FormData();
+                  formData.append('title', newCase.title);
+                  formData.append('description', newCase.description);
+
+                  try {
+                    await createCase(formData);
+                    setIsCreateDialogOpen(false);
+                    setNewCase({ title: "", description: "" }); // category removed
+                    router.refresh();
+                  } catch (error) {
+                    console.error("Error creating case:", error);
+                  }
+                }}
                 className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
               >
                 Create Case
@@ -142,19 +114,7 @@ export function CasesPage({ cases: initialCases }: CasesPageProps) {
             className="pl-10 bg-input border-border"
           />
         </div>
-        <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-          <SelectTrigger className="w-full sm:w-48 bg-input border-border">
-            <SelectValue placeholder="All Categories" />
-          </SelectTrigger>
-          <SelectContent className="glass-card">
-            <SelectItem value="all">All Categories</SelectItem>
-            {CASE_CATEGORIES.map((cat) => (
-              <SelectItem key={cat.value} value={cat.value}>
-                {cat.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        {/* Removed Category filter Select */}
       </div>
 
       {/* Cases Grid */}
@@ -190,9 +150,7 @@ export function CasesPage({ cases: initialCases }: CasesPageProps) {
               <p className="text-sm text-muted-foreground mt-1 line-clamp-2">{caseItem.description}</p>
 
               <div className="flex items-center gap-2 mt-4">
-                <span className="text-xs px-2 py-1 rounded-full bg-secondary/10 text-secondary">
-                  {getCategoryLabel(caseItem.category)}
-                </span>
+                {/* Removed category display as it's no longer on Case */}
                 <span className="text-xs px-2 py-1 rounded-full bg-primary/10 text-primary">
                   {caseItem._count?.evidence || 0} items
                 </span>
@@ -212,7 +170,7 @@ export function CasesPage({ cases: initialCases }: CasesPageProps) {
           <FolderOpen className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
           <h3 className="text-lg font-medium text-foreground mb-2">No cases found</h3>
           <p className="text-muted-foreground mb-4">
-            {searchQuery || categoryFilter !== "all"
+            {searchQuery
               ? "Try adjusting your search or filters."
               : "Create your first case to start organizing evidence."}
           </p>
