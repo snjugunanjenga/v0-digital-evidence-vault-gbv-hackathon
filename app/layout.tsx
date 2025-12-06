@@ -3,6 +3,7 @@ import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
 import ClerkProviderWrapper from "../components/auth/clerk-provider"
+import { Toaster } from "../components/toaster"
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
 
@@ -35,6 +36,7 @@ export default function RootLayout({ children, }: Readonly<{ children: React.Rea
     <html lang="en" className="dark">
       <body data-testim-main-word-scripts-loaded="true" className={`${inter.variable} font-sans antialiased`}>
         <ClerkProviderWrapper>{children}</ClerkProviderWrapper>
+        <Toaster />
       </body>
     </html>
   )

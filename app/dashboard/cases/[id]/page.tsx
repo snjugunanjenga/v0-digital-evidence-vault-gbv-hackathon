@@ -1,4 +1,4 @@
-import type { Evidence } from '@/lib/types'; // Import Evidence type
+import { Evidence } from '@prisma/client'; // Import Evidence type directly from Prisma
 
 import { auth } from '@clerk/nextjs/server';
 import prisma from '@/lib/prisma';
@@ -87,7 +87,7 @@ export default async function CaseDetailPage({ params }: CaseDetailPageProps) {
             </TableHeader>
             <TableBody>
               {caseData.evidence.length > 0 ? (
-                caseData.evidence.map((evidence: Evidence) => ( // Explicitly type evidence here
+                caseData.evidence.map((evidence) => (
                   <TableRow key={evidence.id}>
                     <TableCell>{evidence.fileName}</TableCell>
                     <TableCell>{evidence.fileType}</TableCell>

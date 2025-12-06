@@ -16,12 +16,16 @@ import {
   Menu,
   X,
   HelpCircle,
+  FileText,
+  Gavel,
 } from "lucide-react"
 import { SignOutButton } from "@clerk/nextjs"
 
 const navItems = [
   { href: "/dashboard", icon: LayoutDashboard, label: "Overview" },
   { href: "/dashboard/cases", icon: FolderOpen, label: "Cases" },
+  { href: "/dashboard/evidence", icon: FileText, label: "Evidence" },
+  { href: "/dashboard/affidavits", icon: Gavel, label: "Affidavits" },
   { href: "/dashboard/upload", icon: Upload, label: "Upload Evidence" },
   { href: "/dashboard/search", icon: Search, label: "Search" },
 ]

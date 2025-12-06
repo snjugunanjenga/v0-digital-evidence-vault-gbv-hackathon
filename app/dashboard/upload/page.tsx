@@ -1,6 +1,12 @@
 import { Suspense } from "react"
-import { EvidenceUploadPage } from "@/components/dashboard/evidence-upload-page"
+import { EvidenceUploadForm } from "@/components/dashboard/evidence-upload-form"
 import { Loader2 } from "lucide-react"
+import { getCases } from "@/lib/actions/case"
+
+async function EvidenceUploadPageContent() {
+  const cases = await getCases()
+  return <EvidenceUploadForm cases={cases} />
+}
 
 function UploadPageFallback() {
   return (
@@ -13,7 +19,7 @@ function UploadPageFallback() {
 export default function UploadPage() {
   return (
     <Suspense fallback={<UploadPageFallback />}>
-      <EvidenceUploadPage />
+      <EvidenceUploadPageContent />
     </Suspense>
   )
 }

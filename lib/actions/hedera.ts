@@ -9,30 +9,19 @@ import { revalidatePath } from 'next/cache';
 import { checkSubscription } from '@/lib/subscription';
 
 const HEDERA_TOPIC_ID = process.env.HEDERA_TOPIC_ID!;
-const HEDERA_TIMESTAMP_LIMIT = 5; // Example limit for free tier
 
 export async function timestampOnHedera(evidenceId: string) {
-  const { userId } = auth();
+  const { userId } = await auth(); // Await auth() to get userId
   if (!userId) {
     throw new Error('You must be logged in to timestamp evidence.');
   }
 
-  const { isPro, userUsage } = await checkSubscription();
+  const subscription = await checkSubscription();
 
-  // Create usage record if it doesn't exist, even for pro users to track usage
-  let currentUserUsage = userUsage;
-  if (!currentUserUsage) {
-    currentUserUsage = await prisma.userUsage.create({
-      data: {
-        userId,
-      },
-    });
+  if (subscription === false || !subscription?.isActive) { // Handle false explicitly
+    throw new Error('You must have an active subscription to timestamp evidence.');
   }
 
-  // Free tier is subject to a limit
-  if (!isPro && currentUserUsage.timestampCount >= HEDERA_TIMESTAMP_LIMIT) {
-    throw new Error('You have reached your Hedera timestamp limit. Please upgrade your plan.');
-  }
 
   const evidence = await prisma.evidence.findFirst({
     where: { id: evidenceId, userId },

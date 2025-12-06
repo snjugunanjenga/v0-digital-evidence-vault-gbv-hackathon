@@ -25,11 +25,11 @@ model Evidence {
   fileType            String
   fileHash            String    @unique
   uploadDate          DateTime  @default(now())
-  caseId              String
+  caseId              String?
   userId              String
   hederaTimestamp     DateTime?
   hederaTransactionId String?
-  case                Case      @relation(fields: [caseId], references: [id])
+  case                Case?     @relation(fields: [caseId], references: [id])
   user                User      @relation(fields: [userId], references: [id])
   testimonyRecord     TestimonyRecord? // One-to-one relationship with TestimonyRecord
 }
@@ -47,13 +47,14 @@ model TestimonyRecord {
 
 
 model User {
-  id        String     @id
-  email     String     @unique
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  cases     Case[]
-  evidence  Evidence[]
-  usage     UserUsage?
+  id               String     @id
+  email            String     @unique
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+  stripeCustomerId String?    @unique // New: Stripe Customer ID
+  cases            Case[]
+  evidence         Evidence[]
+  usage            UserUsage?
 }
 
 model UserUsage {

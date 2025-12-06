@@ -9,7 +9,7 @@ import { EvidenceCategory, CaseCategory } from '@/lib/types';
 import { timestampOnHedera } from '@/lib/actions/hedera';
 
 const EvidenceSchema = z.object({
-  caseId: z.string(),
+  caseId: z.string().optional(),
   fileName: z.string(),
   fileType: z.string(),
   fileHash: z.string(),
@@ -34,16 +34,18 @@ export async function storeEvidence(metadata: EvidenceMetadata) {
 
   const validatedData = EvidenceSchema.parse(metadata);
 
-  // Critical Security Check: Verify that the case belongs to the user.
-  const caseOwner = await prisma.case.findUnique({
-    where: {
-      id: validatedData.caseId,
-      userId: userId,
-    },
-  });
+  // Critical Security Check: Verify that the case belongs to the user if caseId is provided.
+  if (validatedData.caseId) {
+    const caseOwner = await prisma.case.findUnique({
+      where: {
+        id: validatedData.caseId,
+        userId: userId,
+      },
+    });
 
-  if (!caseOwner) {
-    throw new Error('Unauthorized: You do not have permission to add evidence to this case.');
+    if (!caseOwner) {
+      throw new Error('Unauthorized: You do not have permission to add evidence to this case.');
+    }
   }
 
   try {
@@ -63,12 +65,17 @@ export async function storeEvidence(metadata: EvidenceMetadata) {
     throw new Error('Failed to store evidence in the database.');
   }
 
-  revalidatePath(`/dashboard/cases/${validatedData.caseId}`);
-  redirect(`/dashboard/cases/${validatedData.caseId}`);
+  if (validatedData.caseId) {
+    revalidatePath(`/dashboard/cases/${validatedData.caseId}`);
+    redirect(`/dashboard/cases/${validatedData.caseId}`);
+  } else {
+    revalidatePath('/dashboard/evidence');
+    redirect('/dashboard/evidence');
+  }
 }
 
 interface GetEvidenceFilters {
-  caseId?: string;
+  caseId?: string | null;
   category?: EvidenceCategory;
   dateFrom?: Date;
   dateTo?: Date;
@@ -84,8 +91,12 @@ export async function getEvidence(filters: GetEvidenceFilters = {}) {
 
   const whereClause: any = { userId };
 
-  if (filters.caseId && filters.caseId !== 'all') {
-    whereClause.caseId = filters.caseId;
+  if (filters.caseId !== undefined) {
+    if (filters.caseId === null) {
+      whereClause.caseId = null;
+    } else if (filters.caseId !== 'all') {
+      whereClause.caseId = filters.caseId;
+    }
   }
   if (filters.category) {
     whereClause.category = filters.category;
@@ -121,6 +132,44 @@ export async function getEvidence(filters: GetEvidenceFilters = {}) {
   } catch (error) {
     console.error("Database error fetching evidence:", error);
     throw new Error('Failed to fetch evidence.');
+  }
+}
+
+export async function assignEvidenceToCase(evidenceId: string, newCaseId: string) {
+  const { userId } = await auth();
+
+  if (!userId) {
+    throw new Error('Unauthorized');
+  }
+
+  // Verify ownership of the evidence
+  const existingEvidence = await prisma.evidence.findUnique({
+    where: { id: evidenceId, userId },
+  });
+
+  if (!existingEvidence) {
+    throw new Error('Evidence not found or unauthorized access.');
+  }
+
+  // Verify ownership of the target case
+  const targetCase = await prisma.case.findUnique({
+    where: { id: newCaseId, userId },
+  });
+
+  if (!targetCase) {
+    throw new Error('Target case not found or unauthorized access.');
+  }
+
+  try {
+    await prisma.evidence.update({
+      where: { id: evidenceId },
+      data: { caseId: newCaseId },
+    });
+    revalidatePath('/dashboard/evidence');
+    revalidatePath(`/dashboard/cases/${newCaseId}`);
+  } catch (error) {
+    console.error("Database error assigning evidence to case:", error);
+    throw new Error('Failed to assign evidence to case.');
   }
 }
 

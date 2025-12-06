@@ -49,7 +49,7 @@ export default function TermsPage() {
             <section>
               <h2 className="text-2xl font-semibold text-foreground mb-4">5. Disclaimer</h2>
               <p className="text-muted-foreground">
-                Our services are provided "as is" without warranties of any kind. We are not responsible for any damages
+                Our services are provided &quot;as is&quot; without warranties of any kind. We are not responsible for any damages
                 arising from the use of our platform.
               </p>
             </section>

@@ -57,7 +57,7 @@ export async function createCase(formData: FormData) {
     });
     revalidatePath('/dashboard'); // Revalidate dashboard to show new case in overview
     revalidatePath('/dashboard/cases'); // Revalidate cases page
-    return newCase;
+    // return newCase; // Removed return statement to satisfy server action type
   } catch (error) {
     console.error("Database error creating case:", error instanceof Error ? error.message : error);
     // Surface the original error message to help debugging in dev (still throw a friendly error)

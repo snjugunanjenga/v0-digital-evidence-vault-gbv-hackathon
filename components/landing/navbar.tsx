@@ -11,6 +11,8 @@ const navLinks = [
   { href: "#features", label: "Features" },
   { href: "#how-it-works", label: "How It Works" },
   { href: "#testimonials", label: "Stories" },
+  { href: "#pricing", label: "Pricing" },
+  { href: "/partners/onboarding", label: "Partners" },
   { href: "/contact", label: "Contact" },
 ]
 
@@ -54,6 +56,9 @@ export function Navbar() {
             </Button>
           </SignedOut>
           <SignedIn>
+            <Button asChild className="neon-border bg-primary/10 hover:bg-primary/20 text-primary">
+              <Link href="/dashboard">Dashboard</Link>
+            </Button>
             <UserButton />
           </SignedIn>
         </div>
@@ -87,7 +92,12 @@ export function Navbar() {
                 </Button>
               </SignedOut>
               <SignedIn>
-                <UserButton />
+                <div className="flex items-center gap-4">
+                  <Button asChild className="neon-border bg-primary/10 hover:bg-primary/20 text-primary w-full">
+                    <Link href="/dashboard">Dashboard</Link>
+                  </Button>
+                  <UserButton />
+                </div>
               </SignedIn>
             </div>
           </SheetContent>
