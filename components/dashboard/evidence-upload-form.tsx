@@ -321,7 +321,7 @@ export function EvidenceUploadForm({ cases }: EvidenceUploadFormProps) {
                   <SelectValue placeholder="Select a case" />
                 </SelectTrigger>
                 <SelectContent className="glass-card">
-                  <SelectItem value="">Save to Evidence Locker</SelectItem>
+                  <SelectItem value="no-case-selected">Save to Evidence Locker</SelectItem>
                   {cases.map((c) => (
                     <SelectItem key={c.id} value={c.id}>
                       {c.title}

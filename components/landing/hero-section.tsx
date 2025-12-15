@@ -32,8 +32,7 @@ export function HeroSection() {
 
           {/* Subheadline */}
           <p className="text-lg md:text-xl text-muted-foreground mb-10 max-w-2xl mx-auto text-pretty">
-            Securely preserve digital evidence of gender-based violence with blockchain-verified timestamps. Your files
-            never leave your device — only cryptographic proof is recorded.
+            Securely preserve digital evidence of gender-based violence with blockchain-verified timestamps. Your evidence is secured with SHA-256 hashing and blockchain timestamps. Plus, leverage our AI Legal Assistant and seamlessly integrate with cloud storage. Partner with leading organizations fighting GBV.
           </p>
 
           {/* CTA Buttons */}

@@ -1,101 +1,70 @@
-import { Navbar } from "@/components/landing/navbar"
-import { Footer } from "@/components/landing/footer"
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import Link from "next/link"
-import { ExternalLink, Building2, Scale, Heart, Shield } from "lucide-react"
+"use client";
 
-const partners = [
-  {
-    name: "FIDA Kenya",
-    type: "Legal Aid",
-    description: "Federation of Women Lawyers providing free legal services to women in Kenya.",
-    icon: Scale,
-  },
-  {
-    name: "Coalition on Violence Against Women",
-    type: "Advocacy",
-    description: "Leading organization working to end violence against women in Kenya.",
-    icon: Heart,
-  },
-  {
-    name: "Gender Violence Recovery Centre",
-    type: "Healthcare",
-    description: "Providing medical care and psychosocial support to GBV survivors.",
-    icon: Building2,
-  },
-  {
-    name: "Kenya National Commission on Human Rights",
-    type: "Government",
-    description: "Government body promoting and protecting human rights in Kenya.",
-    icon: Shield,
-  },
-  {
-    name: "CREAW",
-    type: "Legal Aid",
-    description: "Centre for Rights Education and Awareness providing legal support.",
-    icon: Scale,
-  },
-  {
-    name: "Wangu Kanja Foundation",
-    type: "Survivor Support",
-    description: "Survivor-led organization supporting GBV survivors in Kenya.",
-    icon: Heart,
-  },
-]
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { MessageSquare } from "lucide-react";
+
+// Assuming partners data is imported from lib/partners.ts
+import { partners } from "@/lib/partners";
 
 export default function PartnersPage() {
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
-      <main className="pt-24 pb-16">
-        <div className="container mx-auto px-4">
-          {/* Header */}
-          <div className="max-w-3xl mx-auto text-center mb-12">
-            <h1 className="text-4xl font-bold text-foreground mb-4">Our Partners</h1>
-            <p className="text-muted-foreground">
-              We work with leading organizations across Kenya to support survivors of gender-based violence.
-            </p>
-          </div>
+    <div className="container mx-auto px-4 py-20">
+      <div className="text-center mb-16">
+        <h1 className="text-4xl md:text-5xl font-bold mb-4">
+          Our Global <span className="text-primary neon-text">Partners</span>
+        </h1>
+        <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+          We collaborate with a network of dedicated organizations worldwide, committed to supporting survivors of gender-based violence. Engage directly with our partners for advice and support.
+        </p>
+      </div>
 
-          {/* Partners Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto mb-16">
-            {partners.map((partner, i) => (
-              <Card key={i} className="glass-card hover:neon-border transition-all">
-                <CardContent className="p-6">
-                  <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
-                      <partner.icon className="w-6 h-6 text-primary" />
-                    </div>
-                    <div>
-                      <span className="text-xs px-2 py-1 rounded-full bg-secondary/10 text-secondary">
-                        {partner.type}
-                      </span>
-                      <h3 className="font-semibold text-foreground mt-2">{partner.name}</h3>
-                      <p className="text-sm text-muted-foreground mt-1">{partner.description}</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+        {partners.map((partner) => (
+          <Card key={partner.name} className="glass-card p-6 border-border hover:shadow-lg transition-shadow duration-300">
+            <CardHeader className="flex-row items-center gap-4 p-0 mb-4">
+              {/* Placeholder for Logo/Icon */}
+              <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                <MessageSquare className="w-6 h-6 text-primary" />
+              </div>
+              <div>
+                <CardTitle className="text-xl font-semibold">{partner.name}</CardTitle>\n      
+                <CardDescription className="text-sm text-muted-foreground">
+                  {partner.website.replace(/(https?:\/\/)/, '')}
+                </CardDescription>              </div>
+            </CardHeader>
+            <CardContent className="p-0">
+              <p className="text-muted-foreground mb-4 line-clamp-3">{partner.description}</p>
+              <div className="flex flex-col gap-2">
+                <Button asChild className="w-full">
+                  <Link href={partner.website} target="_blank" rel="noopener noreferrer">
+                    Visit Website
+                  </Link>
+                </Button>
+                <Button asChild variant="outline" className="w-full neon-border bg-transparent hover:bg-primary/10">
+                  <Link href="#" className="flex items-center gap-2">
+                    <MessageSquare className="w-4 h-4" />
+                    Chat for Advice
+                  </Link>
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
 
-          {/* Become Partner */}
-          <div className="max-w-2xl mx-auto text-center glass-card neon-border rounded-2xl p-12">
-            <h2 className="text-2xl font-bold text-foreground mb-4">Become a Partner</h2>
-            <p className="text-muted-foreground mb-6">
-              Are you an organization working to support GBV survivors? Partner with us to provide your clients with
-              secure evidence preservation tools.
-            </p>
-            <Button asChild className="bg-primary hover:bg-primary/90 text-primary-foreground">
-              <Link href="/contact">
-                Contact Us <ExternalLink className="w-4 h-4 ml-2" />
-              </Link>
-            </Button>
-          </div>
-        </div>
-      </main>
-      <Footer />
+      <div className="text-center mt-16">
+        <h2 className="text-3xl font-bold mb-4">Become a Partner</h2>
+        <p className="text-lg text-muted-foreground max-w-3xl mx-auto mb-8">
+          If your institution or organization is committed to supporting survivors of GBV, we invite you to join our growing network. Partner with us to make a greater impact.
+        </p>
+        <Button asChild size="lg" className="neon-border bg-primary/10 hover:bg-primary/20 text-primary">
+          <Link href="/onboarding/partner">
+            Partner Onboarding
+          </Link>
+        </Button>
+      </div>
     </div>
-  )
+  );
 }

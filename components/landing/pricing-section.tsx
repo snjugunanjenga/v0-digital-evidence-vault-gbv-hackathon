@@ -6,6 +6,7 @@ const tiers = [
   {
     name: "Free",
     price: "KES 0",
+    targetMarket: "Survivors & Individuals",
     features: [
       "5 Hedera timestamps per month",
       "Secure client-side hashing",
@@ -18,6 +19,7 @@ const tiers = [
   {
     name: "Pro",
     price: "KES 1,000",
+    targetMarket: "Small Firms & NGOs",
     features: [
       "50 Hedera timestamps per month",
       "All features from Free tier",
@@ -31,6 +33,7 @@ const tiers = [
   {
     name: "Enterprise",
     price: "Contact Us",
+    targetMarket: "Institutions & Custom Needs",
     features: [
       "Unlimited Hedera timestamps",
       "Dedicated support and SLAs",

@@ -1,4 +1,4 @@
-import { Shield, Fingerprint, FolderLock, Search, Clock, FileText } from "lucide-react"
+import { Shield, Fingerprint, FolderLock, Search, Clock, FileText, Bot, Cloud } from "lucide-react"
 
 const features = [
   {
@@ -35,6 +35,16 @@ const features = [
     icon: FileText,
     title: "Legal Reports",
     description: "Generate comprehensive PDF reports with verification certificates ready for court submission.",
+  },
+  {
+    icon: Bot,
+    title: "AI Legal Assistant",
+    description: "Leverage AI for automatic transcription and affidavit generation, streamlining the legal process.",
+  },
+  {
+    icon: Cloud,
+    title: "Cloud Storage Integration",
+    description: "Link your Google Drive or OneDrive to reference evidence without uploading, simplifying evidence management.",
   },
 ]
 

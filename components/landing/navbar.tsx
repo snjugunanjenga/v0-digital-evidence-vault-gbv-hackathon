@@ -12,8 +12,9 @@ const navLinks = [
   { href: "#how-it-works", label: "How It Works" },
   { href: "#testimonials", label: "Stories" },
   { href: "#pricing", label: "Pricing" },
-  { href: "/partners/onboarding", label: "Partners" },
-  { href: "/contact", label: "Contact" },
+  { href: "/partners", label: "Partners" }, // Dedicated Partners page
+  { href: "/onboarding", label: "Onboarding" }, // General onboarding link
+  { href: "/contact", label: "Contact" }, // Re-added Contact link
 ]
 
 export function Navbar() {
